@@ -1,0 +1,11 @@
+{
+  "__typename": "Company",
+  "createdOn": "2024-01-03T14:15:59+00:00",
+  "customerNumber": "32859",
+  "email": null,
+  "id": "/companies/1eeaa429-e2d0-6138-9dfe-bb92a790087d",
+  "modifiedOn": "2026-09-04T14:00:20+00:00",
+  "name": "Landesbetrieb Bau und Immobilien Hessen (LBIH)",
+  "webProfileLinkedin": "https://linkedin.com/company/37291169",
+  "webProfileXing": "https://www.xing.com/pages/landesbetriebbauundimmobilienhessen"
+}

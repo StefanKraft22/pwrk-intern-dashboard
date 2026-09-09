@@ -1,0 +1,82 @@
+[
+  {
+    "number": "QUO-696808-H1N5S8",
+    "title": null,
+    "createdOn": "2026-08-25T07:38:53+00:00",
+    "grossTotal": "4899.00",
+    "status": "Entwurf",
+    "customerNumber": null
+  },
+  {
+    "number": "QUO-698357-F2K3H2",
+    "title": null,
+    "createdOn": "2026-09-02T13:12:41+00:00",
+    "grossTotal": "1399.00",
+    "status": "Entwurf",
+    "customerNumber": "04.62/26"
+  },
+  {
+    "number": "QUO-416708-F3B7T4",
+    "title": null,
+    "createdOn": "2022-12-29T13:59:06+00:00",
+    "grossTotal": "0.00",
+    "status": "Entwurf",
+    "customerNumber": null
+  },
+  {
+    "number": "QUO-470702-N7Z9X4",
+    "title": null,
+    "createdOn": "2023-07-19T13:58:37+00:00",
+    "grossTotal": "1650.00",
+    "status": "Entwurf",
+    "customerNumber": "04.07/23"
+  },
+  {
+    "number": "QUO-543770-Z6X6T3",
+    "title": null,
+    "createdOn": "2024-06-06T05:47:15+00:00",
+    "grossTotal": "2689.00",
+    "status": "Entwurf",
+    "customerNumber": null
+  },
+  {
+    "number": "QUO-564399-M8D7Y8",
+    "title": null,
+    "createdOn": "2024-09-10T07:47:03+00:00",
+    "grossTotal": "2599.00",
+    "status": "Entwurf",
+    "customerNumber": null
+  },
+  {
+    "number": "QUO-567076-P7Q8D1",
+    "title": null,
+    "createdOn": "2024-09-20T11:48:28+00:00",
+    "grossTotal": "2399.00",
+    "status": "Entwurf",
+    "customerNumber": null
+  },
+  {
+    "number": "QUO-667496-N6J0M3",
+    "title": null,
+    "createdOn": "2026-03-05T07:07:53+00:00",
+    "grossTotal": "1399.00",
+    "status": "Entwurf",
+    "customerNumber": "04.25/26"
+  },
+  {
+    "number": "QUO-695830-H4T9G9",
+    "title": null,
+    "createdOn": "2026-08-18T13:02:14+00:00",
+    "grossTotal": "478.00",
+    "status": "Angenommen",
+    "customerNumber": null
+  },
+  {
+    "number": "QUO-298574-F5K1M9",
+    "title": null,
+    "createdOn": "2021-12-01T14:26:54+00:00",
+    "grossTotal": "1594.00",
+    "status": "Angenommen",
+    "customerNumber": "04.150/21"
+  }
+]

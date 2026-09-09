@@ -1,0 +1,179 @@
+@import "tailwindcss";
+@import "tw-animate-css";
+@import "shadcn/tailwind.css";
+@import "@fontsource-variable/inter";
+@import "@fontsource-variable/space-grotesk";
+
+@custom-variant dark (&:is(.dark *));
+
+/* ==========================================================================
+   PERSONALWERK BRAND THEME
+   Kern-Marke (Navy/Rot) exakt aus der echten Personalwerk-Startseite
+   (C:\Claude\Personalwerk\Personalwerk Startseite\styles.css) uebernommen —
+   hat bei Konflikten Vorrang vor der beigefuegten Styleguide-Palette.
+   Ergaenzende Semantikfarben (Gruen/Gold/Terracotta/Neutral-Grau), die auf
+   der Startseite nicht existieren, kommen 1:1 aus der beigefuegten Palette.
+   ========================================================================== */
+
+@theme inline {
+  --font-heading: var(--font-display);
+  --font-sans: 'Inter Variable', 'Inter', system-ui, sans-serif;
+  --font-display: 'Space Grotesk Variable', 'Space Grotesk', system-ui, sans-serif;
+  --color-sidebar-ring: var(--sidebar-ring);
+  --color-sidebar-border: var(--sidebar-border);
+  --color-sidebar-accent-foreground: var(--sidebar-accent-foreground);
+  --color-sidebar-accent: var(--sidebar-accent);
+  --color-sidebar-primary-foreground: var(--sidebar-primary-foreground);
+  --color-sidebar-primary: var(--sidebar-primary);
+  --color-sidebar-foreground: var(--sidebar-foreground);
+  --color-sidebar: var(--sidebar);
+  --color-chart-5: var(--chart-5);
+  --color-chart-4: var(--chart-4);
+  --color-chart-3: var(--chart-3);
+  --color-chart-2: var(--chart-2);
+  --color-chart-1: var(--chart-1);
+  --color-ring: var(--ring);
+  --color-input: var(--input);
+  --color-border: var(--border);
+  --color-destructive: var(--destructive);
+  --color-accent-foreground: var(--accent-foreground);
+  --color-accent: var(--accent);
+  --color-muted-foreground: var(--muted-foreground);
+  --color-muted: var(--muted);
+  --color-secondary-foreground: var(--secondary-foreground);
+  --color-secondary: var(--secondary);
+  --color-primary-foreground: var(--primary-foreground);
+  --color-primary: var(--primary);
+  --color-popover-foreground: var(--popover-foreground);
+  --color-popover: var(--popover);
+  --color-card-foreground: var(--card-foreground);
+  --color-card: var(--card);
+  --color-foreground: var(--foreground);
+  --color-background: var(--background);
+  --color-success: var(--success);
+  --color-success-foreground: var(--success-foreground);
+  --color-warning: var(--warning);
+  --color-warning-foreground: var(--warning-foreground);
+  --color-info: var(--info);
+  --color-info-foreground: var(--info-foreground);
+  --color-terracotta: var(--terracotta);
+  --color-terracotta-foreground: var(--terracotta-foreground);
+  --radius-sm: calc(var(--radius) * 0.6);
+  --radius-md: calc(var(--radius) * 0.8);
+  --radius-lg: var(--radius);
+  --radius-xl: calc(var(--radius) * 1.4);
+  --radius-2xl: calc(var(--radius) * 1.8);
+}
+
+:root {
+  /* ---- Kern-Marke: exakt von personalwerk.de ---- */
+  --pw-navy-900: #03192e;
+  --pw-navy-800: #072944;
+  --pw-navy-700: #0a3358;
+  --pw-navy-400: #2e86c8;
+  --pw-paper: #ffffff;
+  --pw-white: #eef3f8;
+  --pw-grey-text: #8ba3ba;
+  --pw-red-500: #e51747;
+  --pw-red-400: #ff3d63;
+  --pw-red-700: #b30f34;
+
+  /* ---- Beigefuegte Styleguide-Palette (ergaenzend, kein Konflikt) ---- */
+  --sg-blue-900: #001e36;
+  --sg-blue-700: #003865;
+  --sg-blue-500: #4d6a97;
+  --sg-blue-300: #92aecf;
+  --sg-blue-200: #bed0ea;
+  --sg-blue-100: #edf3ff;
+
+  --sg-red-900: #4a0616;
+  --sg-red-700: #830c28;
+  --sg-red-500: #e51746;
+  --sg-red-300: #ef778a;
+  --sg-red-200: #f8c6cc;
+  --sg-red-100: #fdebf0;
+
+  --sg-green-900: #324e44;
+  --sg-green-700: #306f5b;
+  --sg-green-600: #2e8f72;
+  --sg-green-300: #6fac99;
+  --sg-green-100: #e1ebe7;
+
+  --sg-gold-900: #8d6630;
+  --sg-gold-700: #c48d42;
+  --sg-gold-500: #e2a95b;
+  --sg-gold-300: #e8c79a;
+  --sg-gold-200: #f6e3c6;
+  --sg-gold-100: #fdf5e9;
+
+  --sg-terracotta-900: #401614;
+  --sg-terracotta-700: #88312d;
+  --sg-terracotta-500: #db504f;
+  --sg-terracotta-300: #eb928d;
+  --sg-terracotta-200: #f7cfcc;
+  --sg-terracotta-100: #fceeed;
+
+  --sg-grey-900: #2f353d;
+  --sg-grey-700: #49515c;
+  --sg-grey-500: #717a86;
+  --sg-grey-300: #a5adb7;
+  --sg-grey-200: #ccd2da;
+  --sg-grey-100: #eceff3;
+
+  --radius: 0.6rem;
+
+  --background: var(--sg-grey-100);
+  --foreground: var(--pw-navy-900);
+  --card: var(--pw-paper);
+  --card-foreground: var(--pw-navy-900);
+  --popover: var(--pw-paper);
+  --popover-foreground: var(--pw-navy-900);
+  --primary: var(--pw-navy-800);
+  --primary-foreground: #ffffff;
+  --secondary: var(--sg-grey-100);
+  --secondary-foreground: var(--pw-navy-900);
+  --muted: var(--sg-grey-100);
+  --muted-foreground: var(--sg-grey-500);
+  --accent: var(--sg-blue-100);
+  --accent-foreground: var(--pw-navy-800);
+  --destructive: var(--pw-red-700);
+  --success: var(--sg-green-600);
+  --success-foreground: #ffffff;
+  --warning: var(--sg-gold-700);
+  --warning-foreground: #ffffff;
+  --info: var(--sg-blue-500);
+  --info-foreground: #ffffff;
+  --terracotta: var(--sg-terracotta-700);
+  --terracotta-foreground: #ffffff;
+  --border: var(--sg-grey-200);
+  --input: var(--sg-grey-200);
+  --ring: var(--pw-navy-700);
+  --chart-1: var(--pw-navy-800);
+  --chart-2: var(--sg-blue-500);
+  --chart-3: var(--pw-navy-400);
+  --chart-4: var(--sg-gold-700);
+  --chart-5: var(--sg-grey-300);
+  --sidebar: var(--pw-navy-900);
+  --sidebar-foreground: var(--pw-white);
+  --sidebar-primary: var(--pw-red-500);
+  --sidebar-primary-foreground: #ffffff;
+  --sidebar-accent: var(--pw-navy-800);
+  --sidebar-accent-foreground: #ffffff;
+  --sidebar-border: rgba(255, 255, 255, .12);
+  --sidebar-ring: var(--pw-red-500);
+}
+
+@layer base {
+  * {
+    @apply border-border outline-ring/50;
+  }
+  body {
+    @apply bg-background text-foreground font-sans;
+  }
+  h1, h2, h3, h4 {
+    @apply font-heading;
+  }
+  .tabular-nums {
+    font-variant-numeric: tabular-nums;
+  }
+}

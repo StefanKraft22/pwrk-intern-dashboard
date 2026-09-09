@@ -1,0 +1,162 @@
+[
+  {
+    "number": "223000080200",
+    "title": null,
+    "createdOn": "2023-11-30T10:57:24+00:00",
+    "grossTotal": "0.00",
+    "status": "Beauftragt",
+    "invoiceNumber": null
+  },
+  {
+    "number": "223000082283",
+    "title": null,
+    "createdOn": "2023-12-08T14:56:51+00:00",
+    "grossTotal": "2194.00",
+    "status": "Beauftragt",
+    "invoiceNumber": null
+  },
+  {
+    "number": "223000085641",
+    "title": null,
+    "createdOn": "2023-12-21T13:45:44+00:00",
+    "grossTotal": "1750.00",
+    "status": "Beauftragt",
+    "invoiceNumber": null
+  },
+  {
+    "number": "223000079910",
+    "title": null,
+    "createdOn": "2023-11-29T10:52:16+00:00",
+    "grossTotal": "1399.00",
+    "status": "Beauftragt",
+    "invoiceNumber": null
+  },
+  {
+    "number": "223000072813",
+    "title": null,
+    "createdOn": "2023-10-25T14:04:46+00:00",
+    "grossTotal": "1399.00",
+    "status": "Beauftragt",
+    "invoiceNumber": null
+  },
+  {
+    "number": "223000065135",
+    "title": null,
+    "createdOn": "2023-09-19T13:56:25+00:00",
+    "grossTotal": "1399.00",
+    "status": "Beauftragt",
+    "invoiceNumber": null
+  },
+  {
+    "number": "223000051437",
+    "title": null,
+    "createdOn": "2023-07-19T13:51:16+00:00",
+    "grossTotal": "2465.00",
+    "status": "Beauftragt",
+    "invoiceNumber": null
+  },
+  {
+    "number": "223000058016",
+    "title": null,
+    "createdOn": "2023-08-16T13:26:18+00:00",
+    "grossTotal": "649.00",
+    "status": "Beauftragt",
+    "invoiceNumber": null
+  },
+  {
+    "number": "223000040667",
+    "title": null,
+    "createdOn": "2023-06-05T13:02:47+00:00",
+    "grossTotal": "1998.00",
+    "status": "Beauftragt",
+    "invoiceNumber": null
+  },
+  {
+    "number": "223000056231",
+    "title": null,
+    "createdOn": "2023-08-08T14:47:24+00:00",
+    "grossTotal": "899.00",
+    "status": "Beauftragt",
+    "invoiceNumber": null
+  },
+  {
+    "number": "226000041686",
+    "title": null,
+    "createdOn": "2026-09-04T11:55:56+00:00",
+    "grossTotal": "1399.00",
+    "status": "Beauftragt",
+    "invoiceNumber": "1116485"
+  },
+  {
+    "number": "226000039765",
+    "title": null,
+    "createdOn": "2026-08-25T07:39:52+00:00",
+    "grossTotal": "4899.00",
+    "status": "Beauftragt",
+    "invoiceNumber": "1114641"
+  },
+  {
+    "number": "226000039689",
+    "title": null,
+    "createdOn": "2026-08-24T12:52:44+00:00",
+    "grossTotal": "2000.00",
+    "status": "Beauftragt",
+    "invoiceNumber": "1114574"
+  },
+  {
+    "number": "226000039678",
+    "title": null,
+    "createdOn": "2026-08-24T12:03:56+00:00",
+    "grossTotal": "1399.00",
+    "status": "Beauftragt",
+    "invoiceNumber": "1114745"
+  },
+  {
+    "number": "226000039647",
+    "title": null,
+    "createdOn": "2026-08-24T10:21:13+00:00",
+    "grossTotal": "1399.00",
+    "status": "Beauftragt",
+    "invoiceNumber": "1114735"
+  },
+  {
+    "number": "226000038813",
+    "title": null,
+    "createdOn": "2026-08-18T13:07:35+00:00",
+    "grossTotal": "478.00",
+    "status": "Beauftragt",
+    "invoiceNumber": "1113926"
+  },
+  {
+    "number": "226000038811",
+    "title": null,
+    "createdOn": "2026-08-18T12:58:59+00:00",
+    "grossTotal": "478.00",
+    "status": "Beauftragt",
+    "invoiceNumber": "1113819"
+  },
+  {
+    "number": "226000037854",
+    "title": null,
+    "createdOn": "2026-08-12T07:52:21+00:00",
+    "grossTotal": "1399.00",
+    "status": "Beauftragt",
+    "invoiceNumber": "1112757"
+  },
+  {
+    "number": "226000037735",
+    "title": null,
+    "createdOn": "2026-08-11T11:37:32+00:00",
+    "grossTotal": "1399.00",
+    "status": "Beauftragt",
+    "invoiceNumber": "1112957"
+  },
+  {
+    "number": "226000037363",
+    "title": null,
+    "createdOn": "2026-08-07T13:44:21+00:00",
+    "grossTotal": "4784.00",
+    "status": "Beauftragt",
+    "invoiceNumber": "1112663"
+  }
+]
