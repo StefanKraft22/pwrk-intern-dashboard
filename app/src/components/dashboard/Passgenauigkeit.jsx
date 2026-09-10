@@ -35,7 +35,7 @@ export function PassgenauigkeitBadge({ ad, size = "default" }) {
               />
             ))}
           </div>
-          {size !== "sm" && <span className="font-mono text-xs tabular-nums text-muted-foreground">{pct} % vs. Cluster</span>}
+          {size !== "sm" && <span className="font-mono text-xs tabular-nums text-muted-foreground">{pct} % Passgenauigkeit</span>}
         </div>
       </TooltipTrigger>
       <TooltipContent className="max-w-xs text-xs">
