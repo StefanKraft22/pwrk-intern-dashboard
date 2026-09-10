@@ -70,7 +70,7 @@ function ApplicationsInputTile({ adId, applicationClicksValue }) {
         </p>
       )}
       <p className="text-[0.72rem] leading-snug text-muted-foreground">
-        Eingabe manuell über Ihr Recruiting System (BMS) -{" "}
+        Eingabe manuell oder über Ihr Recruiting System (BMS) -{" "}
         <a className="underline decoration-dotted underline-offset-2 hover:text-foreground" href="#bausteine">
           Noch kein BMS? Jetzt informieren →
         </a>
