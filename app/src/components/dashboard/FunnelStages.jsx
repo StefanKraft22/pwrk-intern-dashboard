@@ -46,7 +46,7 @@ function ApplicationsInputTile({ adId, applicationClicksValue }) {
   };
 
   return (
-    <div className="flex min-w-[180px] flex-1 flex-col gap-2 rounded-xl border-2 border-dashed border-[var(--sg-gold-700)]/50 bg-[var(--sg-gold-100)]/40 p-4">
+    <div className="flex min-w-[180px] flex-1 flex-col gap-2 rounded-xl border-2 border-[var(--sg-gold-700)]/50 bg-[var(--sg-gold-100)]/40 p-4">
       <div className="flex items-center gap-1.5 text-xs font-medium text-[var(--sg-gold-900)]">
         <ClipboardCheck className="size-3.5" />
         Eingegangene Bewerbungen
