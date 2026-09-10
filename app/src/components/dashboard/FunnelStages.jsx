@@ -11,12 +11,6 @@ const DISCREPANCY_EXPLANATION =
   "Abweichungen entstehen durch unterschiedliche Messmethoden. Die Differenz sind die mobilen Klicks und die über die Börsen eingekauften Reichweiten (SEM, Display), die direkt in den Apps stattfinden und nicht über unser Pixel erfasst werden können.";
 
 function StageTile({ stage }) {
-  const hasBoth = stage.own != null && stage.external != null;
-  // Eigene Messung schlägt Börse: Steht oben bereits "Quelle: Eigene Messung"
-  // (own > external), ist die Aufschlüsselung darunter redundant und wird
-  // komplett ausgeblendet.
-  const ownWins = hasBoth && stage.own > stage.external;
-  const showBreakdown = hasBoth && !ownWins;
   return (
     <div className="flex min-w-[152px] flex-1 flex-col gap-2 rounded-xl border border-border bg-card p-4">
       <div className="flex items-center justify-between gap-2">
@@ -40,19 +34,6 @@ function StageTile({ stage }) {
       </div>
 
       {!stage.isMissingCritical && <SourceBadge source={stage.source} />}
-
-      {showBreakdown && (
-        <div className="mt-1 space-y-0.5 border-t border-border pt-2 text-[0.72rem] text-muted-foreground">
-          <div className="flex justify-between gap-2">
-            <span>Fremdmessung Börse</span>
-            <span className="font-mono tabular-nums">{formatNumber(stage.external)}</span>
-          </div>
-          <div className="flex justify-between gap-2">
-            <span>Eigene Messung</span>
-            <span className="font-mono tabular-nums">{formatNumber(stage.own)}</span>
-          </div>
-        </div>
-      )}
 
       <p className="text-[0.72rem] leading-snug text-muted-foreground">{stage.sub}</p>
     </div>
