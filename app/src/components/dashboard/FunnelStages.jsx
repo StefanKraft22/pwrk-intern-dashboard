@@ -12,6 +12,11 @@ const DISCREPANCY_EXPLANATION =
 
 function StageTile({ stage }) {
   const hasBoth = stage.own != null && stage.external != null;
+  // Eigene Messung schlägt Börse: Steht oben bereits "Quelle: Eigene Messung"
+  // (own > external), ist die Aufschlüsselung darunter redundant und wird
+  // komplett ausgeblendet.
+  const ownWins = hasBoth && stage.own > stage.external;
+  const showBreakdown = hasBoth && !ownWins;
   return (
     <div className="flex min-w-[152px] flex-1 flex-col gap-2 rounded-xl border border-border bg-card p-4">
       <div className="flex items-center justify-between gap-2">
@@ -36,7 +41,7 @@ function StageTile({ stage }) {
 
       {!stage.isMissingCritical && <SourceBadge source={stage.source} />}
 
-      {hasBoth && (
+      {showBreakdown && (
         <div className="mt-1 space-y-0.5 border-t border-border pt-2 text-[0.72rem] text-muted-foreground">
           <div className="flex justify-between gap-2">
             <span>Fremdmessung Börse</span>
