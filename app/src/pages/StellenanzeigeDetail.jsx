@@ -40,23 +40,23 @@ export default function StellenanzeigeDetail() {
       </div>
 
       <Card className="mb-6 grid grid-cols-2 gap-x-8 gap-y-3 p-5 sm:grid-cols-4">
-        <div className="flex items-baseline gap-2">
+        <div>
           <span className="font-mono text-[0.66rem] uppercase tracking-wider text-muted-foreground">Auftragsnr.</span>
-          <p className="font-mono text-[1.3125rem] tabular-nums">{ad.order.number}</p>
+          <p className="font-mono text-[1.75rem] tabular-nums">{ad.order.number}</p>
         </div>
-        <div className="flex items-baseline gap-2">
+        <div>
           <span className="font-mono text-[0.66rem] uppercase tracking-wider text-muted-foreground">Rechnungsnr.</span>
-          <p className="font-mono text-[1.3125rem] tabular-nums">{ad.order.invoiceNumber || "–"}</p>
+          <p className="font-mono text-[1.75rem] tabular-nums">{ad.order.invoiceNumber || "–"}</p>
         </div>
-        <div className="flex items-baseline gap-2">
+        <div>
           <span className="font-mono text-[0.66rem] uppercase tracking-wider text-muted-foreground">Gesamtpreis</span>
-          <p className="font-mono text-[1.3125rem] tabular-nums">
+          <p className="font-mono text-[1.75rem] tabular-nums">
             {ad.order.grossTotal ? `${Number(ad.order.grossTotal).toLocaleString("de-DE", { minimumFractionDigits: 2 })} €` : "–"}
           </p>
         </div>
-        <div className="flex items-baseline gap-2">
+        <div>
           <span className="font-mono text-[0.66rem] uppercase tracking-wider text-muted-foreground">Gebuchtes Produkt</span>
-          <p className="text-[1.3125rem]">{ad.products[0] || "–"}</p>
+          <p className="text-[1.75rem]">{ad.products[0] || "–"}</p>
         </div>
       </Card>
 
