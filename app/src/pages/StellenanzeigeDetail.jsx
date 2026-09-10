@@ -39,24 +39,24 @@ export default function StellenanzeigeDetail() {
         <PassgenauigkeitBadge ad={ad} />
       </div>
 
-      <Card className="mb-6 grid grid-cols-2 gap-x-8 gap-y-3 p-5 sm:grid-cols-4">
+      <Card className="mb-6 flex flex-wrap items-start gap-x-6 gap-y-3 p-5">
         <div>
           <span className="font-mono text-[0.66rem] uppercase tracking-wider text-muted-foreground">Auftragsnr.</span>
-          <p className="font-mono text-[1.75rem] tabular-nums">{ad.order.number}</p>
+          <p className="font-mono text-[1.3125rem] whitespace-nowrap tabular-nums">{ad.order.number}</p>
         </div>
         <div>
           <span className="font-mono text-[0.66rem] uppercase tracking-wider text-muted-foreground">Rechnungsnr.</span>
-          <p className="font-mono text-[1.75rem] tabular-nums">{ad.order.invoiceNumber || "–"}</p>
+          <p className="font-mono text-[1.3125rem] whitespace-nowrap tabular-nums">{ad.order.invoiceNumber || "–"}</p>
         </div>
         <div>
           <span className="font-mono text-[0.66rem] uppercase tracking-wider text-muted-foreground">Gesamtpreis</span>
-          <p className="font-mono text-[1.75rem] tabular-nums">
+          <p className="font-mono text-[1.3125rem] whitespace-nowrap tabular-nums">
             {ad.order.grossTotal ? `${Number(ad.order.grossTotal).toLocaleString("de-DE", { minimumFractionDigits: 2 })} €` : "–"}
           </p>
         </div>
         <div>
           <span className="font-mono text-[0.66rem] uppercase tracking-wider text-muted-foreground">Gebuchtes Produkt</span>
-          <p className="text-[1.75rem]">{ad.products[0] || "–"}</p>
+          <p className="text-[1.3125rem] whitespace-nowrap">{ad.products[0] || "–"}</p>
         </div>
       </Card>
 
