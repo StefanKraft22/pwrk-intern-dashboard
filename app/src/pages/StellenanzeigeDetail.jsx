@@ -61,11 +61,7 @@ export default function StellenanzeigeDetail() {
       </Card>
 
       <section className="mb-6">
-        <h2 className="mb-1 font-heading text-base font-medium">Performance-Funnel</h2>
-        <p className="mb-4 text-sm text-muted-foreground">
-          Jede Stufe zeigt den Hauptwert nach Quellen-Regel (höherer Wert gewinnt), das Quellen-Label und — sofern beide Quellen
-          vorliegen — die Aufschlüsselung. Die fünfte Stufe „Eingegangene Bewerbungen“ liegt außerhalb des Tracking-Bereichs.
-        </p>
+        <h2 className="mb-4 font-heading text-base font-medium">Performance-Funnel</h2>
         <FunnelStages ad={ad} />
       </section>
 
