@@ -39,23 +39,19 @@ export default function StellenanzeigeDetail() {
         <PassgenauigkeitBadge ad={ad} />
       </div>
 
-      <Card className="mb-6 flex flex-wrap items-baseline gap-x-6 gap-y-3 p-5">
-        <div className="flex items-baseline gap-2">
-          <span className="font-mono text-[0.66rem] uppercase tracking-wider text-muted-foreground">Auftragsnr.</span>
+      <Card className="mb-6 flex flex-col gap-1.5 p-5">
+        <div className="flex flex-wrap gap-x-6 font-mono text-[0.66rem] uppercase tracking-wider text-muted-foreground">
+          <span>Auftragsnr.</span>
+          <span>Rechnungsnr.</span>
+          <span>Gesamtpreis</span>
+          <span>Gebuchtes Produkt</span>
+        </div>
+        <div className="flex flex-wrap items-baseline gap-x-6">
           <p className="font-mono text-[1.3125rem] whitespace-nowrap tabular-nums">{ad.order.number}</p>
-        </div>
-        <div className="flex items-baseline gap-2">
-          <span className="font-mono text-[0.66rem] uppercase tracking-wider text-muted-foreground">Rechnungsnr.</span>
           <p className="font-mono text-[1.3125rem] whitespace-nowrap tabular-nums">{ad.order.invoiceNumber || "–"}</p>
-        </div>
-        <div className="flex items-baseline gap-2">
-          <span className="font-mono text-[0.66rem] uppercase tracking-wider text-muted-foreground">Gesamtpreis</span>
           <p className="font-mono text-[1.3125rem] whitespace-nowrap tabular-nums">
             {ad.order.grossTotal ? `${Number(ad.order.grossTotal).toLocaleString("de-DE", { minimumFractionDigits: 2 })} €` : "–"}
           </p>
-        </div>
-        <div className="flex items-baseline gap-2">
-          <span className="font-mono text-[0.66rem] uppercase tracking-wider text-muted-foreground">Gebuchtes Produkt</span>
           <p className="text-[1.3125rem] whitespace-nowrap">{ad.products[0] || "–"}</p>
         </div>
       </Card>
