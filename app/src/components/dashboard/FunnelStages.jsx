@@ -1,28 +1,16 @@
-import { ArrowRight, ClipboardCheck, Info } from "lucide-react";
+import { ArrowRight, ClipboardCheck } from "lucide-react";
 import { useState } from "react";
 import SourceBadge from "./SourceBadge";
 import { buildFunnel, formatNumber } from "@/lib/funnel";
 import { useApplicationsInput } from "@/lib/useApplicationsInput";
 import { Input } from "@/components/ui/input";
-import { Tooltip, TooltipContent, TooltipTrigger } from "@/components/ui/tooltip";
 import { cn } from "@/lib/utils";
-
-const DISCREPANCY_EXPLANATION =
-  "Abweichungen entstehen durch unterschiedliche Messmethoden. Die Differenz sind die mobilen Klicks und die über die Börsen eingekauften Reichweiten (SEM, Display), die direkt in den Apps stattfinden und nicht über unser Pixel erfasst werden können.";
 
 function StageTile({ stage }) {
   return (
     <div className="flex min-w-[152px] flex-1 flex-col gap-2 rounded-xl border border-border bg-card p-4">
       <div className="flex items-center justify-between gap-2">
         <span className="text-xs font-medium text-muted-foreground">{stage.label}</span>
-        <Tooltip>
-          <TooltipTrigger asChild>
-            <button aria-label="Erläuterung zur Messmethode" className="text-muted-foreground/60 hover:text-foreground" type="button">
-              <Info className="size-3.5" />
-            </button>
-          </TooltipTrigger>
-          <TooltipContent className="max-w-xs text-xs">{DISCREPANCY_EXPLANATION}</TooltipContent>
-        </Tooltip>
       </div>
 
       <div className="font-heading text-2xl font-semibold tabular-nums text-foreground">
@@ -82,7 +70,7 @@ function ApplicationsInputTile({ adId, applicationClicksValue }) {
         </p>
       )}
       <p className="text-[0.72rem] leading-snug text-muted-foreground">
-        Aus Ihrem eigenen System — manuell oder automatisch aus dem PPG Recruiting (BMS).{" "}
+        Eingabe manuell oder automatisch über Ihr Recruiting System (BMS) -{" "}
         <a className="underline decoration-dotted underline-offset-2 hover:text-foreground" href="#bausteine">
           Noch kein BMS? Jetzt informieren →
         </a>
