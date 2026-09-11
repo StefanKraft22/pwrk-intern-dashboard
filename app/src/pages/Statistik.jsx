@@ -66,7 +66,7 @@ export default function Statistik() {
               <th className="px-4 py-3 text-right font-medium">Klicks</th>
               <th className="px-4 py-3 text-right font-medium">Hits</th>
               <th className="px-4 py-3 text-right font-medium">Interaktionen</th>
-              <th className="px-4 py-3 text-right font-medium">Bewerbungs-Klicks</th>
+              <th className="px-4 py-3 text-right font-medium">Gestartete Bewerbungen</th>
             </tr>
           </thead>
           <tbody>
@@ -99,7 +99,7 @@ export default function Statistik() {
           barClass="bg-[var(--sg-blue-500)]"
           hint="Aggregiert über alle laufenden Anzeigen, Hauptwert je Anzeige (führendes Produkt)."
           rows={applicationClicksByBoard.rows}
-          title="Bewerbungs-Klicks nach Stellenbörse"
+          title="Gestartete Bewerbungen nach Stellenbörse"
           total={applicationClicksByBoard.total}
         />
       </div>

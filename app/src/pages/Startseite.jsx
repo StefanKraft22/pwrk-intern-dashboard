@@ -49,7 +49,7 @@ export default function Startseite() {
         <KpiCard label="Klicks (Monat)" value={formatNumber(monthly.clicks)} />
         <KpiCard label="Hits (Monat)" value={formatNumber(monthly.hits)} />
         <KpiCard label="Interaktionen (Monat)" value={formatNumber(monthly.interactions)} />
-        <KpiCard label="Bewerbungs-Klicks (Monat)" value={formatNumber(monthly.interests)} />
+        <KpiCard label="Gestartete Bewerbungen (Monat)" value={formatNumber(monthly.interests)} />
       </section>
 
       <section className="mb-6">

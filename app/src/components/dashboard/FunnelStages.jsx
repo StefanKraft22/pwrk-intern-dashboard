@@ -69,11 +69,8 @@ function ApplicationsInputTile({ adId, applicationClicksValue }) {
           Ihr Wert ist höher als die getrackten Klicks. Das ist möglich, bitte prüfen Sie, ob Klicks aus anderen Quellen einfließen.
         </p>
       )}
-      <p className="text-[0.72rem] leading-snug text-muted-foreground">
-        Eingabe manuell oder über Ihr Recruiting System (BMS) -{" "}
-        <a className="underline decoration-dotted underline-offset-2 hover:text-foreground" href="#bausteine">
-          Noch kein BMS? Jetzt informieren →
-        </a>
+      <p className="mt-1 border-t border-[var(--sg-gold-700)]/25 pt-2.5 text-[0.72rem] leading-snug text-muted-foreground">
+        Eingabe manuell oder über Ihr Recruiting System (BMS)
       </p>
     </div>
   );
