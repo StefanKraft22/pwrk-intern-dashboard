@@ -260,8 +260,8 @@ export default function StellenanzeigeDetail() {
                 <h3 className="font-heading text-sm font-medium">Preise je Stellenbörse im Paket</h3>
               </div>
               <p className="mb-3 text-xs text-muted-foreground">
-                UVP und Paketpreis laut Preisliste je Stellenbörse. Anteil Gesamtpreis: tatsächlich gezahlter Preis, verteilt nach UVP-Anteil der
-                Stellenbörse an allen UVPs im Paket. TKP: anteiliger Preis je 1.000 Impressions, laufzeitgewichtet geschätzt.
+                UVP und Paketpreis laut Preisliste je Stellenbörse. Anteil Gesamtpreis: Anteil des UVP der Stellenbörse an allen UVPs im Paket.
+                TKP: anteiliger, nach diesem Anteil verteilter Preis je 1.000 Impressions, laufzeitgewichtet geschätzt.
               </p>
               <BoardPricingTable data={boardPricing} />
             </Card>

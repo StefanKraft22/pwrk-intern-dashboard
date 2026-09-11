@@ -263,10 +263,10 @@ function getProductPricing(product) {
 }
 
 // Tabelle je gebuchter Stellenbörse: Listenpreis (UVP) und Paketpreis laut
-// Preisliste, rechnerischer Anteil am tatsächlich gezahlten Gesamtpreis
-// (gewichtet nach UVP-Anteil der Börse an allen UVPs im Paket) sowie der
-// anteilige TKP auf Basis des laufzeitgewichteten Impressions-Anteils (siehe
-// buildBoardBreakdown für dieselbe Gewichtungslogik).
+// Preisliste, Anteil des UVP an allen UVPs im Paket (in Prozent) sowie der
+// anteilige TKP auf Basis des tatsächlich gezahlten Gesamtpreises (gewichtet
+// nach diesem UVP-Anteil) und des laufzeitgewichteten Impressions-Anteils
+// (siehe buildBoardBreakdown für dieselbe Gewichtungslogik).
 export function buildBoardPricing(ad) {
   const products = ad.products || [];
   if (!products.length) return [];
@@ -286,15 +286,15 @@ export function buildBoardPricing(ad) {
   return products.map((product, i) => {
     const { uvp, preisImPaket } = pricing[i];
     const uvpShare = uvpSum > 0 ? uvp / uvpSum : 1 / products.length;
-    const anteilGesamtpreis = totalCost != null ? totalCost * uvpShare : null;
+    const anteilGesamtpreisEuro = totalCost != null ? totalCost * uvpShare : null;
     const dayWeight = days[i] / totalDays;
     const impressions = totalImpressions != null ? totalImpressions * dayWeight : null;
-    const tkp = anteilGesamtpreis != null && impressions ? (anteilGesamtpreis / impressions) * 1000 : null;
+    const tkp = anteilGesamtpreisEuro != null && impressions ? (anteilGesamtpreisEuro / impressions) * 1000 : null;
     return {
       product,
       board: resolveBoardName(product),
       uvp,
-      anteilGesamtpreis,
+      anteilGesamtpreisPercent: uvpShare * 100,
       preisImPaket,
       tkp,
     };

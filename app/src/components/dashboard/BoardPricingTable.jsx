@@ -1,6 +1,11 @@
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { formatCurrency } from "@/lib/funnel";
 
+function formatPercent(value) {
+  if (value == null) return "–";
+  return `${value.toLocaleString("de-DE", { minimumFractionDigits: 1, maximumFractionDigits: 1 })} %`;
+}
+
 export default function BoardPricingTable({ data }) {
   if (!data?.length) {
     return <p className="text-sm text-muted-foreground">Keine Preisdaten verfügbar.</p>;
@@ -25,7 +30,7 @@ export default function BoardPricingTable({ data }) {
               <p className="text-xs whitespace-normal text-muted-foreground">{row.product.trim()}</p>
             </TableCell>
             <TableCell className="text-right font-mono tabular-nums">{formatCurrency(row.uvp)}</TableCell>
-            <TableCell className="text-right font-mono tabular-nums">{formatCurrency(row.anteilGesamtpreis)}</TableCell>
+            <TableCell className="text-right font-mono tabular-nums">{formatPercent(row.anteilGesamtpreisPercent)}</TableCell>
             <TableCell className="text-right font-mono tabular-nums">{formatCurrency(row.preisImPaket)}</TableCell>
             <TableCell className="text-right font-mono tabular-nums">{formatCurrency(row.tkp)}</TableCell>
           </TableRow>
