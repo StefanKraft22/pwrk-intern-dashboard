@@ -1,4 +1,4 @@
-import { ArrowRight, ClipboardCheck } from "lucide-react";
+import { ChevronRight, ClipboardCheck } from "lucide-react";
 import { useState } from "react";
 import SourceBadge from "./SourceBadge";
 import { buildFunnel, formatNumber } from "@/lib/funnel";
@@ -86,7 +86,7 @@ export default function FunnelStages({ ad, className }) {
         <div className="flex items-stretch gap-2" key={stage.key}>
           <StageTile stage={stage} />
           <div className="flex items-center text-muted-foreground/50">
-            <ArrowRight className="size-4" />
+            <ChevronRight className="size-7" strokeWidth={3} />
           </div>
         </div>
       ))}

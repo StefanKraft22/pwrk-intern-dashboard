@@ -2,10 +2,9 @@ import { useMemo, useState } from "react";
 import { Link } from "react-router-dom";
 import { ArrowDown, ArrowUp, ArrowUpDown } from "lucide-react";
 import ads from "@/data/advertisements.json";
-import SourceBadge from "@/components/dashboard/SourceBadge";
 import { PassgenauigkeitBadge } from "@/components/dashboard/Passgenauigkeit";
 import { Card } from "@/components/ui/card";
-import { computePassgenauigkeit, formatDate, formatNumber, resolveMainValue, SOURCE_LABEL } from "@/lib/funnel";
+import { buildBoardList, computePassgenauigkeit, formatDate, formatNumber, getBoardColor, getRemainingRuntimeDays, resolveMainValue } from "@/lib/funnel";
 import { cn } from "@/lib/utils";
 
 const STATUS_STYLES = {
@@ -18,9 +17,16 @@ const COLUMNS = [
   { key: "date", label: "Schaltdatum", getValue: (ad) => new Date(ad.publicationStartDate).getTime() },
   { key: "title", label: "Stellentitel", getValue: (ad) => ad.title.toLowerCase() },
   { key: "order", label: "Auftragsnr.", getValue: (ad) => Number(ad.order.number) },
+  { key: "boards", label: "Geschaltete Stellenbörsen", getValue: (ad) => buildBoardList(ad).map((b) => b.board).join(", ") },
+  { key: "runtimes", label: "Laufzeiten je Börse", align: "right", getValue: (ad) => Math.max(0, ...buildBoardList(ad).map((b) => b.days ?? 0)) },
+  {
+    key: "remaining",
+    label: "Restlaufzeit",
+    align: "right",
+    getValue: (ad) => Math.max(0, ...buildBoardList(ad).map((b) => getRemainingRuntimeDays(ad.publicationStartDate, b.days) ?? 0)),
+  },
   { key: "clicks", label: "Klicks", align: "right", getValue: (ad) => resolveMainValue(ad.kpi.clicks).value },
-  { key: "source", label: "Quelle", getValue: (ad) => SOURCE_LABEL[resolveMainValue(ad.kpi.clicks).source] },
-  { key: "appClicks", label: "Gestartete Bewerbungen", align: "right", getValue: (ad) => resolveMainValue(ad.kpi.applicationClicks).value },
+  { key: "appClicks", label: "Gestartete Bewerbungen", align: "right", wrap: true, getValue: (ad) => resolveMainValue(ad.kpi.applicationClicks).value },
   { key: "passgenauigkeit", label: "Passgenauigkeit", getValue: (ad) => computePassgenauigkeit(ad)?.ratio ?? null },
 ];
 
@@ -51,7 +57,7 @@ export default function Stellenanzeigen() {
   };
 
   return (
-    <div className="mx-auto max-w-[1400px] px-6 py-6">
+    <div className="w-full px-6 py-6">
       <h1 className="mb-1 font-heading text-xl font-medium text-foreground">Stellenanzeigen</h1>
       <p className="mb-6 text-sm text-muted-foreground">{ads.length} laufende / terminierte Anzeigen. Hauptwert je Kennzahl folgt der Quellen-Regel aus Schritt 3.</p>
 
@@ -59,12 +65,16 @@ export default function Stellenanzeigen() {
         <table className="w-full min-w-[1100px] text-sm">
           <thead>
             <tr className="border-b border-border text-left text-xs uppercase tracking-wide text-muted-foreground">
-              {COLUMNS.map((col) => (
-                <th className={cn("px-4 py-3 font-medium", col.align === "right" && "text-right")} key={col.key}>
+              {COLUMNS.map((col, i) => (
+                <th
+                  className={cn("px-4 py-3 font-medium", col.align === "right" && "text-right", i === COLUMNS.length - 1 && "pr-6")}
+                  key={col.key}
+                >
                   <button
                     className={cn(
-                      "inline-flex items-center gap-1 whitespace-nowrap select-none hover:text-foreground",
-                      col.align === "right" && "flex-row-reverse"
+                      "inline-flex items-center gap-1 select-none hover:text-foreground",
+                      col.wrap ? "max-w-[5.5rem] whitespace-normal leading-tight" : "whitespace-nowrap",
+                      col.align === "right" && "flex-row-reverse text-right"
                     )}
                     onClick={() => toggleSort(col.key)}
                     type="button"
@@ -88,6 +98,7 @@ export default function Stellenanzeigen() {
             {sortedAds.map((ad) => {
               const clicks = resolveMainValue(ad.kpi.clicks);
               const appClicks = resolveMainValue(ad.kpi.applicationClicks);
+              const boardList = buildBoardList(ad);
               return (
                 <tr className="border-b border-border last:border-0 hover:bg-muted/40" key={ad.id}>
                   <td className="px-4 py-3">
@@ -103,12 +114,34 @@ export default function Stellenanzeigen() {
                     {ad.city && <span className="ml-2 text-xs text-muted-foreground">{ad.city}</span>}
                   </td>
                   <td className="px-4 py-3 font-mono text-[0.82rem] tabular-nums">{ad.order.number}</td>
-                  <td className="px-4 py-3 text-right font-mono tabular-nums">{formatNumber(clicks.value)}</td>
                   <td className="px-4 py-3">
-                    <SourceBadge source={clicks.source} />
+                    {boardList.map((b, i) => (
+                      <p className="flex items-center gap-1.5 whitespace-nowrap" key={`${b.board}-${i}`}>
+                        <span className="inline-block size-2.5 shrink-0 rounded-sm" style={{ background: getBoardColor(b.board, i) }} />
+                        {b.board}
+                      </p>
+                    ))}
                   </td>
+                  <td className="px-4 py-3 text-right">
+                    {boardList.map((b, i) => (
+                      <p className="whitespace-nowrap font-mono tabular-nums" key={`${b.board}-${i}`}>
+                        {b.days != null ? `${b.days} Tage` : "–"}
+                      </p>
+                    ))}
+                  </td>
+                  <td className="px-4 py-3 text-right">
+                    {boardList.map((b, i) => {
+                      const remaining = getRemainingRuntimeDays(ad.publicationStartDate, b.days);
+                      return (
+                        <p className="whitespace-nowrap font-mono tabular-nums" key={`${b.board}-${i}`}>
+                          {remaining != null ? `${remaining} Tage` : "–"}
+                        </p>
+                      );
+                    })}
+                  </td>
+                  <td className="px-4 py-3 text-right font-mono tabular-nums">{formatNumber(clicks.value)}</td>
                   <td className="px-4 py-3 text-right font-mono tabular-nums">{formatNumber(appClicks.value)}</td>
-                  <td className="px-4 py-3">
+                  <td className="whitespace-nowrap px-4 py-3 pr-6">
                     <PassgenauigkeitBadge ad={ad} size="sm" />
                   </td>
                 </tr>

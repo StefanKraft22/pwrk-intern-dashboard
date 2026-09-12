@@ -1,42 +1,98 @@
-import { FileText, Gauge, LayoutGrid, LifeBuoy, ListChecks } from "lucide-react";
+import { BookOpen, FileSpreadsheet, FileText, Gauge, LayoutGrid, LifeBuoy, Lightbulb, ListChecks, Route, Scale, Settings, Wallet, X } from "lucide-react";
 import { NavLink } from "react-router-dom";
 import { cn } from "@/lib/utils";
 
-const NAV = [
-  { to: "/", label: "Startseite", icon: LayoutGrid, end: true },
-  { to: "/stellenanzeigen", label: "Stellenanzeigen", icon: FileText },
-  { to: "/auftragsabwicklung", label: "Auftragsabwicklung", icon: ListChecks },
-  { to: "/statistik", label: "Statistik", icon: Gauge },
+const NAV_GROUPS = [
+  {
+    items: [
+      { to: "/", label: "Übersicht", icon: LayoutGrid, end: true },
+      { to: "/empfehlungen", label: "Empfehlungen", icon: Lightbulb },
+      { to: "/stellenanzeigen", label: "Stellenanzeigen", icon: FileText },
+      { to: "/auftragsabwicklung", label: "Auftragsabwicklung", icon: ListChecks },
+      { to: "/statistik", label: "Statistik", icon: Gauge },
+    ],
+  },
+  {
+    label: "Analyse",
+    items: [
+      { to: "/portalvergleich", label: "Portalvergleich", icon: Scale },
+      { to: "/candidate-journey", label: "Candidate Journey", icon: Route },
+      { to: "/budget-kosten", label: "Budget & Kosten", icon: Wallet },
+      { to: "/reports", label: "Reports", icon: FileSpreadsheet },
+    ],
+  },
+  {
+    label: "System",
+    items: [
+      { to: "/hilfe-datenbasis", label: "Hilfe & Datenbasis", icon: BookOpen },
+      { to: "/einstellungen", label: "Einstellungen", icon: Settings },
+    ],
+  },
 ];
 
-export default function Sidebar() {
+function NavContent({ onNavigate }) {
   return (
-    <aside className="hidden w-60 shrink-0 flex-col bg-[#03192e] px-3 py-5 text-white md:flex">
-      <div className="mb-8 px-2 font-heading text-lg font-medium lowercase">
-        personalwerk<span className="text-[#e51747]">.</span>
-      </div>
-      <nav className="flex flex-col gap-0.5" aria-label="Hauptnavigation">
-        {NAV.map((item) => (
-          <NavLink
-            end={item.end}
-            key={item.to}
-            to={item.to}
-            className={({ isActive }) =>
-              cn(
-                "flex items-center gap-2.5 rounded-lg px-3 py-2 text-sm text-white/65 transition-colors hover:bg-white/5 hover:text-white",
-                isActive && "bg-white/10 font-medium text-white"
-              )
-            }
-          >
-            <item.icon className="size-4" strokeWidth={1.75} />
-            {item.label}
-          </NavLink>
+    <>
+      <nav className="flex flex-col gap-4" aria-label="Hauptnavigation">
+        {NAV_GROUPS.map((group, i) => (
+          <div className="flex flex-col gap-0.5" key={group.label ?? i}>
+            {group.label && (
+              <p className="mb-1 px-3 font-mono text-[0.62rem] font-medium uppercase tracking-wider text-white/35">{group.label}</p>
+            )}
+            {group.items.map((item) => (
+              <NavLink
+                end={item.end}
+                key={item.to}
+                onClick={onNavigate}
+                to={item.to}
+                className={({ isActive }) =>
+                  cn(
+                    "flex items-center gap-2.5 rounded-lg px-3 py-2 text-sm text-white/65 transition-colors hover:bg-white/5 hover:text-white",
+                    isActive && "bg-white/10 font-medium text-white"
+                  )
+                }
+              >
+                <item.icon className="size-4" strokeWidth={1.75} />
+                {item.label}
+              </NavLink>
+            ))}
+          </div>
         ))}
       </nav>
       <div className="mt-auto flex items-center gap-2 rounded-lg bg-white/5 px-3 py-2.5 text-xs text-white/60">
         <LifeBuoy className="size-4 shrink-0" strokeWidth={1.75} />
         Hilfe-Center
       </div>
-    </aside>
+    </>
+  );
+}
+
+export default function Sidebar({ mobileOpen, onMobileClose }) {
+  return (
+    <>
+      <aside className="hidden w-60 shrink-0 flex-col overflow-y-auto bg-[#03192e] px-3 py-5 text-white md:flex">
+        <div className="mb-6 px-2 font-heading text-lg font-medium lowercase">
+          personalwerk<span className="text-[#e51747]">.</span>
+        </div>
+        <NavContent />
+      </aside>
+
+      {mobileOpen && (
+        <div className="fixed inset-0 z-50 md:hidden">
+          <div aria-hidden className="absolute inset-0 bg-black/50" onClick={onMobileClose} />
+          <aside className="relative flex h-full w-72 max-w-[80vw] flex-col overflow-y-auto bg-[#03192e] px-3 py-5 text-white">
+            <div className="mb-6 flex items-center justify-between px-2">
+              <span className="font-heading text-lg font-medium lowercase">
+                personalwerk<span className="text-[#e51747]">.</span>
+              </span>
+              <button aria-label="Menü schließen" className="rounded-lg p-1.5 text-white/60 hover:bg-white/10 hover:text-white" onClick={onMobileClose} type="button">
+                <X className="size-4.5" />
+              </button>
+            </div>
+            <NavContent onNavigate={onMobileClose} />
+          </aside>
+        </div>
+      )}
+    </>
   );
 }

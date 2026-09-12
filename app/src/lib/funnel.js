@@ -52,10 +52,76 @@ export function buildFunnel(ad) {
   });
 }
 
+// Portfolioweiter Funnel: echte Kennzahlen je Stufe über alle Anzeigen
+// summiert (Hauptwert-Regel je Anzeige, dann aufaddiert). `coverage` zeigt,
+// bei wie vielen Anzeigen für diese Stufe überhaupt ein Wert vorlag.
+export function buildPortfolioFunnel(ads) {
+  return FUNNEL_STAGES.map((stage) => {
+    let value = 0;
+    let coverage = 0;
+    for (const ad of ads) {
+      const raw = ad.kpi[stage.key] || { own: null, external: null };
+      const resolved = resolveMainValue(raw);
+      if (resolved.value != null) {
+        value += resolved.value;
+        coverage += 1;
+      }
+    }
+    return { ...stage, value, coverage, totalAds: ads.length };
+  });
+}
+
+// Illustrative Erweiterung des Funnels über "Gestartete Bewerbungen" hinaus
+// (abgeschlossene/qualifizierte Bewerbung, Interview, Einstellung) — für
+// diese Stufen liegen keine echten Daten vor. Die Werte sind plausible
+// Beispiel-Verhältnisse zur Veranschaulichung des vollständigen
+// Candidate-Journey-Konzepts und müssen in der UI klar als Beispieldaten
+// gekennzeichnet bleiben.
+const ILLUSTRATIVE_FUNNEL_RATIOS = [
+  { key: "applicationsCompleted", label: "Abgeschlossene Bewerbungen", sub: "Bewerbung vollständig eingereicht", ratio: 0.72 },
+  { key: "applicationsQualified", label: "Qualifizierte Bewerbungen", sub: "Anforderungen erfüllt", ratio: 0.45 },
+  { key: "interviews", label: "Interviews", sub: "Gespräch vereinbart", ratio: 0.55 },
+  { key: "hires", label: "Einstellungen", sub: "Position besetzt", ratio: 0.35 },
+];
+
+export function buildIllustrativeFunnelExtension(startValue) {
+  let current = startValue;
+  return ILLUSTRATIVE_FUNNEL_RATIOS.map((stage) => {
+    current = Math.round(current * stage.ratio);
+    return { key: stage.key, label: stage.label, sub: stage.sub, value: current, isExample: true };
+  });
+}
+
+// Größter relativer Verlust zwischen zwei aufeinanderfolgenden echten
+// Funnel-Stufen (nicht die Beispiel-Erweiterung), inkl. Zuordnung zu einer
+// der im Konzept vorgesehenen Empfehlungs-Situationen.
+export function findBiggestFunnelDropOff(portfolioFunnel) {
+  let worst = null;
+  for (let i = 0; i < portfolioFunnel.length - 1; i++) {
+    const from = portfolioFunnel[i];
+    const to = portfolioFunnel[i + 1];
+    if (!from.value || to.value == null) continue;
+    const dropRatio = 1 - to.value / from.value;
+    if (!worst || dropRatio > worst.dropRatio) {
+      worst = { fromKey: from.key, toKey: to.key, fromLabel: from.label, toLabel: to.label, dropRatio, fromValue: from.value, toValue: to.value };
+    }
+  }
+  return worst;
+}
+
+// Die Cluster-Serie reicht bis zum Ende der gebuchten Laufzeit und enthält für
+// noch nicht erreichte Tage einen eingefrorenen Own-Wert samt hochgerechnetem
+// Median. Für Anzeige und Passgenauigkeit zählen nur bereits verstrichene Tage.
+export function getClusterSeriesToDate(ad) {
+  const series = ad.cluster?.series || [];
+  const today = Date.now();
+  return series.filter((point) => new Date(point.date).getTime() <= today);
+}
+
 // Passgenauigkeit: eigener Endwert der Klicks im Verhältnis zum Cluster-Median
 // vergleichbarer Anzeigen (echte Daten aus /export/cluster/advertisement/{id}).
 export function computePassgenauigkeit(ad) {
-  const series = ad.cluster?.series || [];
+  const series = getClusterSeriesToDate(ad);
   if (!series.length) return null;
   const last = series[series.length - 1];
   if (last.own == null || !last.clusterMedian) return null;
@@ -98,6 +164,25 @@ export function getRuntimeDays(ad) {
     })
     .filter((d) => d != null);
   return days.length ? Math.max(...days) : null;
+}
+
+// Geschaltete Stellenbörsen je Anzeige mit ihrer jeweiligen Laufzeit, zur
+// Anzeige in Übersichtstabellen (z. B. anstelle der Quellen-Spalte).
+export function buildBoardList(ad) {
+  return (ad.products || []).map((p) => {
+    const match = p.match(PRODUCT_DAYS_RE);
+    return { board: resolveBoardName(p), days: match ? Number(match[1]) : null };
+  });
+}
+
+// Restlaufzeit je Börse: Schaltdatum + gebuchte Laufzeit minus bereits
+// verstrichene Tage (Stand heute). Noch nicht gestartete Anzeigen (Schaltdatum
+// in der Zukunft) zeigen die volle gebuchte Laufzeit.
+export function getRemainingRuntimeDays(publicationStartDate, days) {
+  if (days == null || !publicationStartDate) return null;
+  const elapsedMs = Date.now() - new Date(publicationStartDate).getTime();
+  const elapsedDays = Math.max(0, Math.floor(elapsedMs / 86400000));
+  return Math.max(0, days - elapsedDays);
 }
 
 export function resolveBoardName(product) {
@@ -151,7 +236,7 @@ export function buildBoardBreakdown(ad) {
   const totalDays = days.reduce((sum, d) => sum + d, 0) || products.length;
   const baseWeights = days.map((d) => d / totalDays);
   const funnel = buildFunnel(ad);
-  const clusterSeries = ad.cluster?.series || [];
+  const clusterSeries = getClusterSeriesToDate(ad);
   const dailyClicksOwn = ad.dailyClicksOwn || [];
 
   // Kumulierte Cluster-Serie: Zuwachs je Tag (nicht der Gesamtwert) wird mit
@@ -209,6 +294,33 @@ export const COST_METRICS = [
   { key: "interactions", label: "Kosten pro Interaktion", sub: "Gesamtkosten / Interaktionen" },
   { key: "applicationClicks", label: "Kosten pro Bewerbung", sub: "Gesamtkosten / Gestartete Bewerbungen" },
 ];
+
+// Kein separates Budget-Feld vorhanden — Stellenanzeigen sind Festpreis-
+// Buchungen (Gesamtpreis für die gesamte Laufzeit), kein variables
+// Werbebudget mit echtem Verbrauchszähler. Als nachvollziehbare Näherung
+// gilt: "verbraucht" = Anteil der bereits verstrichenen Laufzeit am
+// Gesamtpreis (gleiche Laufzeit-Logik wie getRemainingRuntimeDays/
+// buildCostMetrics) — in der UI immer als Schätzung kennzeichnen.
+export function computeBudgetConsumption(ad) {
+  const totalCost = ad.order?.grossTotal != null ? Number(ad.order.grossTotal) : null;
+  const runtimeDays = getRuntimeDays(ad);
+  if (totalCost == null || !runtimeDays) return null;
+
+  const remainingDays = getRemainingRuntimeDays(ad.publicationStartDate, runtimeDays) ?? runtimeDays;
+  const elapsedDays = Math.min(runtimeDays, Math.max(0, runtimeDays - remainingDays));
+  const consumedPercent = elapsedDays / runtimeDays;
+  const consumedCost = totalCost * consumedPercent;
+
+  return {
+    totalCost,
+    runtimeDays,
+    remainingDays,
+    elapsedDays,
+    consumedPercent,
+    consumedCost,
+    remainingCost: totalCost - consumedCost,
+  };
+}
 
 // Baut Lifetime- und Daily-Kostenkennzahlen je Metrik. Gesamtkosten stammen
 // aus dem Auftrag, die Mengen aus dem Performance-Funnel (Hauptwert-Regel).
@@ -304,4 +416,160 @@ export function buildBoardPricing(ad) {
 export function formatDate(iso) {
   if (!iso) return "–";
   return new Date(iso).toLocaleDateString("de-DE");
+}
+
+function median(values) {
+  if (!values.length) return null;
+  const sorted = [...values].sort((a, b) => a - b);
+  const mid = Math.floor(sorted.length / 2);
+  return sorted.length % 2 ? sorted[mid] : (sorted[mid - 1] + sorted[mid]) / 2;
+}
+
+// Median der Bewerbungsstart-Quote (Klicks -> gestartete Bewerbungen) über
+// alle Anzeigen mit ausreichend Klicks (>=100, sonst zu volatil). Dient als
+// Portfolio-Referenzwert für Funnel-Auffälligkeiten (echte Messdaten).
+export function computePortfolioMedianConversion(ads) {
+  const ratios = ads
+    .map((ad) => {
+      const funnel = buildFunnel(ad);
+      const clicks = funnel.find((s) => s.key === "clicks")?.value;
+      const applications = funnel.find((s) => s.key === "applicationClicks")?.value;
+      return clicks && clicks >= 100 && applications != null ? applications / clicks : null;
+    })
+    .filter((v) => v != null);
+  return median(ratios);
+}
+
+// Aggregierte Tages-Klicks (eigene Messung) über alle Anzeigen hinweg, für
+// die Zeitverlauf-Ansicht auf der Übersicht. Reale Tagesdaten je Anzeige,
+// nur nach Datum aufsummiert.
+export function buildPortfolioDailyClicks(ads) {
+  const byDate = new Map();
+  for (const ad of ads) {
+    for (const point of ad.dailyClicksOwn || []) {
+      if (point.value == null) continue;
+      const key = point.date.slice(0, 10);
+      byDate.set(key, (byDate.get(key) ?? 0) + point.value);
+    }
+  }
+  return [...byDate.entries()]
+    .sort(([a], [b]) => a.localeCompare(b))
+    .map(([date, value]) => ({ date, value }));
+}
+
+// Tages-Klickverlauf für eine einzelne Börse, über alle Anzeigen aggregiert.
+// Bei Anzeigen mit nur dieser einen Börse: exakte Tagesdaten. Bei
+// Mehrbörsen-Anzeigen: der laufzeitgewichtete Anteil aus buildBoardBreakdown
+// (gleiche Schätzmethode wie überall sonst im Produkt).
+export function buildPortfolioDailyClicksByBoard(ads, boardName) {
+  const byDate = new Map();
+  for (const ad of ads) {
+    const products = ad.products || [];
+    if (products.length <= 1) {
+      if (resolveBoardName(products[0]) !== boardName) continue;
+      for (const point of ad.dailyClicksOwn || []) {
+        if (point.value == null) continue;
+        const key = point.date.slice(0, 10);
+        byDate.set(key, (byDate.get(key) ?? 0) + point.value);
+      }
+    } else {
+      const breakdown = buildBoardBreakdown(ad);
+      const entry = breakdown.find((b) => b.board === boardName);
+      if (!entry) continue;
+      for (const point of entry.dailyClicks || []) {
+        if (point.value == null) continue;
+        const key = point.date.slice(0, 10);
+        byDate.set(key, (byDate.get(key) ?? 0) + point.value);
+      }
+    }
+  }
+  return [...byDate.entries()]
+    .sort(([a], [b]) => a.localeCompare(b))
+    .map(([date, value]) => ({ date, value }));
+}
+
+// Portfolioweite Kennzahlen je gebuchter Stellenbörse. Bei Anzeigen mit genau
+// einem gebuchten Produkt sind Klicks/Bewerbungen/Kosten exakt (kein
+// Schätzverfahren nötig). Bei Mehrbörsen-Anzeigen wird dieselbe
+// laufzeitgewichtete Schätzung wie in der Anzeige-Detailseite verwendet
+// (buildBoardBreakdown/buildBoardPricing) — solche Börsen sind über
+// `hasEstimatedContribution` gekennzeichnet.
+export function buildPortfolioBoardPerformance(ads) {
+  const byBoard = new Map();
+
+  const addContribution = (board, { clicks, applications, cost, estimated }) => {
+    const entry = byBoard.get(board) || { board, clicks: 0, applications: 0, cost: 0, adCount: 0, hasEstimatedContribution: false };
+    entry.clicks += clicks ?? 0;
+    entry.applications += applications ?? 0;
+    entry.cost += cost ?? 0;
+    entry.adCount += 1;
+    if (estimated) entry.hasEstimatedContribution = true;
+    byBoard.set(board, entry);
+  };
+
+  for (const ad of ads) {
+    const products = ad.products || [];
+    if (products.length <= 1) {
+      const board = resolveBoardName(products[0]);
+      const funnel = buildFunnel(ad);
+      addContribution(board, {
+        clicks: funnel.find((s) => s.key === "clicks")?.value,
+        applications: funnel.find((s) => s.key === "applicationClicks")?.value,
+        cost: ad.order?.grossTotal != null ? Number(ad.order.grossTotal) : null,
+        estimated: false,
+      });
+    } else {
+      const breakdown = buildBoardBreakdown(ad);
+      const pricing = buildBoardPricing(ad);
+      const totalCost = ad.order?.grossTotal != null ? Number(ad.order.grossTotal) : null;
+      breakdown.forEach((entry, i) => {
+        const percent = pricing[i]?.anteilGesamtpreisPercent;
+        addContribution(entry.board, {
+          clicks: entry.stages.find((s) => s.key === "clicks")?.value,
+          applications: entry.stages.find((s) => s.key === "applicationClicks")?.value,
+          cost: percent != null && totalCost != null ? (percent / 100) * totalCost : null,
+          estimated: true,
+        });
+      });
+    }
+  }
+
+  return [...byBoard.values()]
+    .map((entry) => ({
+      ...entry,
+      conversion: entry.clicks > 0 ? entry.applications / entry.clicks : null,
+      cpa: entry.applications > 0 ? entry.cost / entry.applications : null,
+    }))
+    .sort((a, b) => b.clicks - a.clicks);
+}
+
+// Vereinfachtes Qualitätssignal (0-100) aus zwei bereits im Produkt
+// etablierten, echten Kennzahlen: Anteil Anzeigen mit Passgenauigkeit
+// "Top"/"Beobachten" (60%) und Anteil Anzeigen mit Bewerbungsstart-Quote
+// im/über dem Portfolio-Median (40%). Deckt bewusst nur die Dimensionen ab,
+// für die echte Daten vorliegen — weitere Faktoren aus einem vollständigen
+// Empfehlungs-Score (Skill-/Zielgruppenpassung im Detail, regionale Eignung,
+// Kosteneffizienz je Börse) folgen erst mit entsprechender Datengrundlage.
+export function computeQualityScore(ads) {
+  const passResults = ads.map((ad) => computePassgenauigkeit(ad)).filter(Boolean);
+  const topShare = passResults.length ? passResults.filter((p) => p.tier !== "action").length / passResults.length : null;
+
+  const medianConversion = computePortfolioMedianConversion(ads);
+  const convEligible = ads
+    .map((ad) => {
+      const funnel = buildFunnel(ad);
+      const clicks = funnel.find((s) => s.key === "clicks")?.value;
+      const applications = funnel.find((s) => s.key === "applicationClicks")?.value;
+      return clicks && clicks >= 100 && applications != null ? applications / clicks : null;
+    })
+    .filter((v) => v != null);
+  const convShare =
+    convEligible.length && medianConversion != null ? convEligible.filter((c) => c >= medianConversion * 0.85).length / convEligible.length : null;
+
+  if (topShare == null && convShare == null) return null;
+  const weightedTop = topShare ?? convShare;
+  const weightedConv = convShare ?? topShare;
+  const score = Math.round(100 * (0.6 * weightedTop + 0.4 * weightedConv));
+
+  return { score, topShare, convShare };
 }

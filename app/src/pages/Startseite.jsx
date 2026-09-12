@@ -1,13 +1,31 @@
+import { useMemo, useState } from "react";
 import { Link } from "react-router-dom";
 import ads from "@/data/advertisements.json";
 import intervalKpis from "@/data/interval-kpis.json";
 import customer from "@/data/customer.json";
 import KpiCard from "@/components/dashboard/KpiCard";
 import BausteinStatusleiste from "@/components/dashboard/BausteinStatusleiste";
+import DailyClicksChart from "@/components/dashboard/DailyClicksChart";
+import PortalRankingTable from "@/components/dashboard/PortalRankingTable";
+import QualitySignalCard from "@/components/dashboard/QualitySignalCard";
+import CostDonut from "@/components/dashboard/CostDonut";
+import GlobalFilters, { ZEITRAUM_OPTIONS } from "@/components/layout/GlobalFilters";
 import { PassgenauigkeitBadge } from "@/components/dashboard/Passgenauigkeit";
 import SourceBadge from "@/components/dashboard/SourceBadge";
 import { Card } from "@/components/ui/card";
-import { resolveMainValue, formatNumber, computePassgenauigkeit } from "@/lib/funnel";
+import { cn } from "@/lib/utils";
+import { readSetting } from "@/lib/settings";
+import { generateRecommendations, PRIORITY_LABEL } from "@/lib/recommendations";
+import {
+  resolveMainValue,
+  formatNumber,
+  computePassgenauigkeit,
+  buildPortfolioDailyClicks,
+  buildPortfolioBoardPerformance,
+  computeQualityScore,
+  buildBoardList,
+  getRemainingRuntimeDays,
+} from "@/lib/funnel";
 
 const monthly = intervalKpis.companies["1eeaa429-e2d0-6138-9dfe-bb92a790087d"].values;
 const conversionRate = intervalKpis.companies["1eeaa429-e2d0-6138-9dfe-bb92a790087d"].conversionRate;
@@ -24,10 +42,6 @@ function ownVsExternalTotals(key) {
 
 const clicksTotals = ownVsExternalTotals("clicks");
 
-const topAds = [...ads]
-  .sort((a, b) => (resolveMainValue(b.kpi.clicks).value ?? 0) - (resolveMainValue(a.kpi.clicks).value ?? 0))
-  .slice(0, 6);
-
 const passCounts = ads.reduce(
   (acc, ad) => {
     const p = computePassgenauigkeit(ad);
@@ -37,11 +51,39 @@ const passCounts = ads.reduce(
   { top: 0, watch: 0, action: 0 }
 );
 
+const portfolioDailyClicks = buildPortfolioDailyClicks(ads);
+const portfolioBoards = buildPortfolioBoardPerformance(ads);
+const qualityScore = computeQualityScore(ads);
+const topRecommendations = generateRecommendations().slice(0, 3);
+
+const activeAds = ads.filter((ad) => ad.status === "active");
+const scheduledAds = ads.filter((ad) => ad.status === "scheduled");
+const endingSoonAds = activeAds.filter((ad) => {
+  const boards = buildBoardList(ad);
+  const remaining = Math.max(0, ...boards.map((b) => getRemainingRuntimeDays(ad.publicationStartDate, b.days) ?? 0));
+  return remaining <= 7;
+});
+
 export default function Startseite() {
+  const [zeitraum, setZeitraum] = useState(() => readSetting("defaultZeitraum", "all"));
+
+  const topAds = useMemo(() => {
+    const option = ZEITRAUM_OPTIONS.find((o) => o.key === zeitraum);
+    const scoped =
+      option?.days == null
+        ? ads
+        : ads.filter((ad) => {
+            const days = (Date.now() - new Date(ad.publicationStartDate).getTime()) / 86400000;
+            return days >= 0 && days <= option.days;
+          });
+    return [...scoped].sort((a, b) => (resolveMainValue(b.kpi.clicks).value ?? 0) - (resolveMainValue(a.kpi.clicks).value ?? 0)).slice(0, 6);
+  }, [zeitraum]);
+
   return (
     <div className="mx-auto max-w-[1400px] px-6 py-6">
       <h1 className="mb-1 font-heading text-xl font-medium text-foreground">Herzlich willkommen, {customer.name}</h1>
-      <p className="mb-6 text-sm text-muted-foreground">Übersicht über alle laufenden Stellenanzeigen und Kennzahlen — September 2026.</p>
+      <p className="mb-4 text-sm text-muted-foreground">Übersicht über alle laufenden Stellenanzeigen und Kennzahlen — September 2026.</p>
+      <GlobalFilters onChange={setZeitraum} value={zeitraum} />
 
       <section className="mb-6 grid grid-cols-2 gap-3 md:grid-cols-3 lg:grid-cols-6">
         <KpiCard label="Buchungen (Monat)" value={formatNumber(monthly.advertisement_count)} />
@@ -51,6 +93,48 @@ export default function Startseite() {
         <KpiCard label="Interaktionen (Monat)" value={formatNumber(monthly.interactions)} />
         <KpiCard label="Gestartete Bewerbungen (Monat)" value={formatNumber(monthly.interests)} />
       </section>
+
+      <section className="mb-6">
+        <h2 className="mb-2 font-heading text-sm font-medium">Performance im Zeitverlauf</h2>
+        <Card className="p-5">
+          <p className="mb-3 text-xs text-muted-foreground">Tägliche Klicks (eigene Messung) über alle {ads.length} Anzeigen summiert.</p>
+          <DailyClicksChart color="var(--pw-navy-800)" data={portfolioDailyClicks} />
+        </Card>
+      </section>
+
+      <section className="mb-6">
+        <h2 className="mb-2 font-heading text-sm font-medium">Vorgangs-Cockpit</h2>
+        <div className="grid grid-cols-3 gap-3">
+          <Card className="p-4">
+            <p className="font-heading text-xl font-semibold tabular-nums">{activeAds.length}</p>
+            <p className="text-xs text-muted-foreground">Aktive Anzeigen</p>
+          </Card>
+          <Card className="p-4">
+            <p className="font-heading text-xl font-semibold tabular-nums">{scheduledAds.length}</p>
+            <p className="text-xs text-muted-foreground">Terminierte Anzeigen</p>
+          </Card>
+          <Card className={cn("p-4", endingSoonAds.length > 0 && "border-warning/30 bg-warning/5")}>
+            <p className="font-heading text-xl font-semibold tabular-nums">{endingSoonAds.length}</p>
+            <p className="text-xs text-muted-foreground">Restlaufzeit ≤ 7 Tage</p>
+          </Card>
+        </div>
+      </section>
+
+      <section className="mb-6">
+        <h2 className="mb-2 font-heading text-sm font-medium">Portal-Performance</h2>
+        <PortalRankingTable boards={portfolioBoards} />
+      </section>
+
+      {qualityScore && (
+        <section className="mb-6">
+          <h2 className="mb-2 font-heading text-sm font-medium">Qualitätssignal</h2>
+          <QualitySignalCard
+            bestConversionBoard={portfolioBoards.filter((b) => b.conversion != null).reduce((a, b) => ((b.conversion ?? 0) > (a?.conversion ?? 0) ? b : a), null)}
+            quality={qualityScore}
+            topBoard={portfolioBoards[0]}
+          />
+        </section>
+      )}
 
       <section className="mb-6">
         <Card className="p-4">
@@ -110,6 +194,9 @@ export default function Startseite() {
             Alle {ads.length} Anzeigen →
           </Link>
         </div>
+        {topAds.length === 0 ? (
+          <Card className="p-6 text-center text-sm text-muted-foreground">Keine Anzeigen mit Schaltdatum in diesem Zeitraum.</Card>
+        ) : (
         <Card className="overflow-x-auto p-0">
           <table className="w-full min-w-[720px] text-sm">
             <thead>
@@ -143,6 +230,51 @@ export default function Startseite() {
             </tbody>
           </table>
         </Card>
+        )}
+      </section>
+
+      <section className="mb-6">
+        <h2 className="mb-2 font-heading text-sm font-medium">Kosten- und Budgetübersicht</h2>
+        <Card className="p-5">
+          <p className="mb-3 text-xs text-muted-foreground">
+            Gesamtkosten je Börse über alle {ads.length} Anzeigen, laut Auftragswert. Bei Mehrbörsen-Anzeigen anteilig nach Laufzeit geschätzt.
+          </p>
+          <CostDonut boards={portfolioBoards} />
+        </Card>
+      </section>
+
+      <section className="mb-6">
+        <div className="mb-2 flex items-center justify-between">
+          <h2 className="font-heading text-sm font-medium">Priorisierte Empfehlungen</h2>
+          <Link className="text-xs text-muted-foreground underline decoration-dotted underline-offset-2 hover:text-foreground" to="/empfehlungen">
+            Alle Empfehlungen →
+          </Link>
+        </div>
+        {topRecommendations.length === 0 ? (
+          <Card className="p-6 text-center text-sm text-muted-foreground">Aktuell keine offenen Empfehlungen.</Card>
+        ) : (
+          <div className="grid grid-cols-1 gap-3 md:grid-cols-3">
+            {topRecommendations.map((r) => (
+              <Card className="p-4" key={r.id}>
+                <span
+                  className={cn(
+                    "mb-2 inline-flex items-center rounded-full border px-2 py-0.5 font-mono text-[0.62rem] font-medium uppercase tracking-wide",
+                    r.priority === "hoch" && "border-destructive/40 bg-destructive/10 text-destructive",
+                    r.priority === "mittel" && "border-warning/40 bg-warning/10 text-warning",
+                    r.priority === "hinweis" && "border-border bg-muted text-muted-foreground"
+                  )}
+                >
+                  {PRIORITY_LABEL[r.priority]}
+                </span>
+                <p className="mb-1 font-heading text-sm font-medium text-foreground">{r.title}</p>
+                <p className="mb-2 text-xs text-muted-foreground">{r.adTitle}</p>
+                <Link className="text-xs font-medium text-[var(--sg-blue-700)] hover:underline" to="/empfehlungen">
+                  Details ansehen →
+                </Link>
+              </Card>
+            ))}
+          </div>
+        )}
       </section>
 
       <section>

@@ -11,7 +11,9 @@ import BoardBreakdown from "@/components/dashboard/BoardBreakdown";
 import { PassgenauigkeitBadge } from "@/components/dashboard/Passgenauigkeit";
 import { Card } from "@/components/ui/card";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { buildBoardBreakdown, buildBoardPricing, buildCostMetrics, formatDate, formatNumber, getBoardColor } from "@/lib/funnel";
+import { buildBoardBreakdown, buildBoardPricing, buildCostMetrics, formatDate, formatNumber, getBoardColor, getClusterSeriesToDate } from "@/lib/funnel";
+
+const TAB_TRANSITION = "data-[state=active]:[animation:tab-flip-in_0.5s_cubic-bezier(0.22,1,0.36,1)]";
 
 export default function StellenanzeigeDetail() {
   const { id } = useParams();
@@ -19,6 +21,7 @@ export default function StellenanzeigeDetail() {
   const boardPricing = ad ? buildBoardPricing(ad) : [];
   const costMetrics = ad ? buildCostMetrics(ad) : [];
   const boardBreakdown = ad ? buildBoardBreakdown(ad) : [];
+  const clusterSeries = ad ? getClusterSeriesToDate(ad) : [];
 
   if (!ad) {
     return (
@@ -86,7 +89,7 @@ export default function StellenanzeigeDetail() {
           </TabsTrigger>
         </TabsList>
 
-        <TabsContent value="uebersicht">
+        <TabsContent className={TAB_TRANSITION} value="uebersicht">
           <div className="grid grid-cols-1 gap-4 lg:grid-cols-2">
             <Card className="p-5">
               <div className="mb-1 flex items-center justify-between">
@@ -95,7 +98,7 @@ export default function StellenanzeigeDetail() {
               <p className="mb-3 text-xs text-muted-foreground">
                 Grundlage der Passgenauigkeit: eigene Anzeige (kumuliert) vs. Median vergleichbarer Anzeigen im selben Skill-Cluster.
               </p>
-              <CombinedClusterChart boards={boardBreakdown} series={ad.cluster.series} />
+              <CombinedClusterChart boards={boardBreakdown} series={clusterSeries} />
               <div className="mt-2 flex flex-wrap items-center gap-4 text-xs text-muted-foreground">
                 <span className="flex items-center gap-1.5">
                   <span className="inline-block h-0.5 w-3.5 bg-[var(--pw-navy-800)]" />
@@ -145,7 +148,7 @@ export default function StellenanzeigeDetail() {
           </div>
         </TabsContent>
 
-        <TabsContent value="performance">
+        <TabsContent className={TAB_TRANSITION} value="performance">
           <section className="mb-6 rounded-xl border border-[var(--pw-navy-800)]/20 bg-[var(--pw-navy-800)]/[0.04] p-5">
             <div className="mb-4 flex items-center gap-2">
               <span className="size-2 rounded-full bg-[var(--pw-navy-800)]" />
@@ -161,7 +164,7 @@ export default function StellenanzeigeDetail() {
                 <p className="mb-3 text-xs text-muted-foreground">
                   Grundlage der Passgenauigkeit: eigene Anzeige (kumuliert) vs. Median vergleichbarer Anzeigen im selben Skill-Cluster.
                 </p>
-                <CombinedClusterChart boards={boardBreakdown} series={ad.cluster.series} />
+                <CombinedClusterChart boards={boardBreakdown} series={clusterSeries} />
                 <div className="mt-2 flex flex-wrap items-center gap-4 text-xs text-muted-foreground">
                   <span className="flex items-center gap-1.5">
                     <span className="inline-block h-0.5 w-3.5 bg-[var(--pw-navy-800)]" />
@@ -226,7 +229,7 @@ export default function StellenanzeigeDetail() {
           )}
         </TabsContent>
 
-        <TabsContent value="kosten">
+        <TabsContent className={TAB_TRANSITION} value="kosten">
           <section className="rounded-xl border border-[var(--pw-navy-800)]/20 bg-[var(--pw-navy-800)]/[0.04] p-5">
             <div className="mb-4 flex items-center gap-2">
               <span className="size-2 rounded-full bg-[var(--pw-navy-800)]" />

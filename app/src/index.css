@@ -6,6 +6,18 @@
 
 @custom-variant dark (&:is(.dark *));
 
+/* Register-Wechsel (Tabs) mit leichtem 3D-Flip statt reinem Fade. */
+@keyframes tab-flip-in {
+  0% {
+    opacity: 0;
+    transform: perspective(1200px) rotateY(-16deg) scale(0.97);
+  }
+  100% {
+    opacity: 1;
+    transform: perspective(1200px) rotateY(0deg) scale(1);
+  }
+}
+
 /* ==========================================================================
    PERSONALWERK BRAND THEME
    Kern-Marke (Navy/Rot) exakt aus der echten Personalwerk-Startseite
