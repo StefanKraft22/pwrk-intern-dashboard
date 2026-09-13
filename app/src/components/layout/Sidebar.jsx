@@ -1,4 +1,4 @@
-import { BookOpen, FileSpreadsheet, FileText, Gauge, LayoutGrid, LifeBuoy, Lightbulb, ListChecks, Route, Scale, Settings, Share2, Wallet, X } from "lucide-react";
+import { BookOpen, FileSpreadsheet, FileText, Gauge, LayoutGrid, Lightbulb, ListChecks, Route, Scale, Settings, Share2, Wallet, X } from "lucide-react";
 import { NavLink } from "react-router-dom";
 import { cn } from "@/lib/utils";
 import ansprechpartnerPhoto from "@/assets/ansprechpartner-marcus-kreuchauff.jpg";
@@ -71,10 +71,6 @@ function NavContent({ onNavigate }) {
               Nachricht schreiben
             </a>
           </div>
-        </div>
-        <div className="flex items-center gap-2 rounded-lg bg-white/5 px-3 py-2.5 text-xs text-white/60">
-          <LifeBuoy className="size-4 shrink-0" strokeWidth={1.75} />
-          Hilfe-Center
         </div>
       </div>
     </>
