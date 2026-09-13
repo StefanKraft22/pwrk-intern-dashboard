@@ -99,14 +99,17 @@ export default function SocialMedia() {
         <PlatformDetails />
       </section>
 
-      <section className="mb-6 grid grid-cols-1 gap-4 lg:grid-cols-2">
+      <section className="mb-6">
         <Card className="p-5">
           <h2 className="mb-3 font-heading text-base font-medium">Demografie &amp; Standort</h2>
           <Demographics />
         </Card>
+      </section>
+
+      <section className="mb-6">
         <Card className="p-5">
           <h2 className="mb-1 font-heading text-base font-medium">Kosten &amp; Effizienz</h2>
-          <p className="mb-3 text-xs text-muted-foreground">Kampagnenbudget, Verbrauch und Kostenentwicklung.</p>
+          <p className="mb-3 text-xs text-muted-foreground">Kampagnenbudget, Verbrauch und Kostenentwicklung — Daily (Momentanwert) und Lifetime (kumuliert) je Kostenart.</p>
           <CostEfficiency />
         </Card>
       </section>

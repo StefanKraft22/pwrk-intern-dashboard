@@ -61,7 +61,7 @@ function NavContent({ onNavigate }) {
           </div>
         ))}
       </nav>
-      <div className="mt-auto flex flex-col gap-2">
+      <div className="mt-10 flex flex-col gap-2">
         <div className="flex items-center gap-2.5 rounded-lg bg-white/5 px-3 py-2.5">
           <img alt="" className="size-11 shrink-0 rounded-full object-cover" src={ansprechpartnerPhoto} />
           <div className="min-w-0">
