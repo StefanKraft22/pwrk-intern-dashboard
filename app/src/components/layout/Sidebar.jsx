@@ -1,6 +1,7 @@
 import { BookOpen, FileSpreadsheet, FileText, Gauge, LayoutGrid, LifeBuoy, Lightbulb, ListChecks, Route, Scale, Settings, Wallet, X } from "lucide-react";
 import { NavLink } from "react-router-dom";
 import { cn } from "@/lib/utils";
+import ansprechpartnerPhoto from "@/assets/ansprechpartner-marcus-kreuchauff.jpg";
 
 const NAV_GROUPS = [
   {
@@ -59,9 +60,21 @@ function NavContent({ onNavigate }) {
           </div>
         ))}
       </nav>
-      <div className="mt-auto flex items-center gap-2 rounded-lg bg-white/5 px-3 py-2.5 text-xs text-white/60">
-        <LifeBuoy className="size-4 shrink-0" strokeWidth={1.75} />
-        Hilfe-Center
+      <div className="mt-auto flex flex-col gap-2">
+        <div className="flex items-center gap-2.5 rounded-lg bg-white/5 px-3 py-2.5">
+          <img alt="" className="size-11 shrink-0 rounded-full object-cover" src={ansprechpartnerPhoto} />
+          <div className="min-w-0">
+            <p className="text-[0.65rem] font-medium tracking-wide text-white/50 uppercase">Ihr Ansprechpartner</p>
+            <p className="truncate text-sm font-medium text-white">Marcus Kreuchauff</p>
+            <a className="text-xs text-white/60 underline decoration-dotted underline-offset-2 hover:text-white" href="#">
+              Nachricht schreiben
+            </a>
+          </div>
+        </div>
+        <div className="flex items-center gap-2 rounded-lg bg-white/5 px-3 py-2.5 text-xs text-white/60">
+          <LifeBuoy className="size-4 shrink-0" strokeWidth={1.75} />
+          Hilfe-Center
+        </div>
       </div>
     </>
   );
@@ -71,7 +84,7 @@ export default function Sidebar({ mobileOpen, onMobileClose }) {
   return (
     <>
       <aside className="hidden w-60 shrink-0 flex-col overflow-y-auto bg-[#03192e] px-3 py-5 text-white md:flex">
-        <div className="mb-6 px-2 font-heading text-lg font-medium lowercase">
+        <div className="mb-6 px-2 font-heading text-[1.4625rem] font-medium lowercase">
           personalwerk<span className="text-[#e51747]">.</span>
         </div>
         <NavContent />
@@ -82,7 +95,7 @@ export default function Sidebar({ mobileOpen, onMobileClose }) {
           <div aria-hidden className="absolute inset-0 bg-black/50" onClick={onMobileClose} />
           <aside className="relative flex h-full w-72 max-w-[80vw] flex-col overflow-y-auto bg-[#03192e] px-3 py-5 text-white">
             <div className="mb-6 flex items-center justify-between px-2">
-              <span className="font-heading text-lg font-medium lowercase">
+              <span className="font-heading text-[1.4625rem] font-medium lowercase">
                 personalwerk<span className="text-[#e51747]">.</span>
               </span>
               <button aria-label="Menü schließen" className="rounded-lg p-1.5 text-white/60 hover:bg-white/10 hover:text-white" onClick={onMobileClose} type="button">

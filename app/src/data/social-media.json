@@ -1,0 +1,1364 @@
+{
+  "campaign": {
+    "id": "azubi-2025",
+    "name": "Azubi-Kampagne 2025",
+    "status": "active",
+    "dateRange": {
+      "from": "2025-04-01",
+      "to": "2025-04-30"
+    },
+    "platformCount": 5,
+    "kpis": {
+      "reach": {
+        "value": 482571,
+        "deltaPercent": 68.4,
+        "spark": [
+          7614,
+          9756,
+          12031,
+          14674,
+          18146,
+          23474,
+          29178,
+          35705,
+          43455,
+          51914,
+          61192,
+          71315
+        ]
+      },
+      "impressions": {
+        "value": 1275342,
+        "deltaPercent": 72.1,
+        "spark": [
+          17599,
+          21491,
+          27528,
+          34455,
+          44991,
+          58350,
+          73616,
+          91788,
+          111512,
+          133327,
+          155089,
+          181686
+        ]
+      },
+      "engagements": {
+        "value": 36842,
+        "deltaPercent": 83.7,
+        "spark": [
+          559,
+          663,
+          814,
+          1027,
+          1287,
+          1624,
+          2074,
+          2524,
+          3043,
+          3676,
+          4315,
+          5020
+        ]
+      },
+      "linkClicks": {
+        "value": 18749,
+        "deltaPercent": 65.2,
+        "spark": [
+          256,
+          301,
+          412,
+          550,
+          698,
+          880,
+          1108,
+          1352,
+          1639,
+          1968,
+          2320,
+          2691
+        ]
+      },
+      "applications": {
+        "value": 1284,
+        "deltaPercent": 54.8,
+        "spark": [
+          18,
+          20,
+          25,
+          33,
+          44,
+          56,
+          72,
+          89,
+          108,
+          128,
+          151,
+          176
+        ]
+      },
+      "costPerApplication": {
+        "value": 12.46,
+        "deltaPercent": -28.3,
+        "spark": [
+          6,
+          7,
+          9,
+          12,
+          15,
+          19,
+          23,
+          28,
+          33,
+          40,
+          47,
+          54
+        ]
+      }
+    },
+    "dailySeries": [
+      {
+        "date": "2025-03-31",
+        "reach": 12519,
+        "impressions": 33085,
+        "engagements": 956,
+        "clicks": 486,
+        "applications": 33
+      },
+      {
+        "date": "2025-04-01",
+        "reach": 12579,
+        "impressions": 33244,
+        "engagements": 960,
+        "clicks": 489,
+        "applications": 33
+      },
+      {
+        "date": "2025-04-02",
+        "reach": 15561,
+        "impressions": 41125,
+        "engagements": 1188,
+        "clicks": 605,
+        "applications": 41
+      },
+      {
+        "date": "2025-04-03",
+        "reach": 14642,
+        "impressions": 38697,
+        "engagements": 1118,
+        "clicks": 569,
+        "applications": 39
+      },
+      {
+        "date": "2025-04-04",
+        "reach": 8520,
+        "impressions": 22516,
+        "engagements": 650,
+        "clicks": 331,
+        "applications": 23
+      },
+      {
+        "date": "2025-04-05",
+        "reach": 8539,
+        "impressions": 22567,
+        "engagements": 652,
+        "clicks": 332,
+        "applications": 23
+      },
+      {
+        "date": "2025-04-06",
+        "reach": 14768,
+        "impressions": 39030,
+        "engagements": 1127,
+        "clicks": 574,
+        "applications": 39
+      },
+      {
+        "date": "2025-04-07",
+        "reach": 12426,
+        "impressions": 32840,
+        "engagements": 949,
+        "clicks": 483,
+        "applications": 33
+      },
+      {
+        "date": "2025-04-08",
+        "reach": 11988,
+        "impressions": 31681,
+        "engagements": 915,
+        "clicks": 466,
+        "applications": 32
+      },
+      {
+        "date": "2025-04-09",
+        "reach": 13732,
+        "impressions": 36291,
+        "engagements": 1048,
+        "clicks": 534,
+        "applications": 37
+      },
+      {
+        "date": "2025-04-10",
+        "reach": 14603,
+        "impressions": 38593,
+        "engagements": 1115,
+        "clicks": 567,
+        "applications": 39
+      },
+      {
+        "date": "2025-04-11",
+        "reach": 11517,
+        "impressions": 30438,
+        "engagements": 879,
+        "clicks": 447,
+        "applications": 31
+      },
+      {
+        "date": "2025-04-12",
+        "reach": 10457,
+        "impressions": 27637,
+        "engagements": 798,
+        "clicks": 406,
+        "applications": 28
+      },
+      {
+        "date": "2025-04-13",
+        "reach": 19147,
+        "impressions": 50601,
+        "engagements": 1462,
+        "clicks": 744,
+        "applications": 51
+      },
+      {
+        "date": "2025-04-14",
+        "reach": 16819,
+        "impressions": 44450,
+        "engagements": 1284,
+        "clicks": 653,
+        "applications": 45
+      },
+      {
+        "date": "2025-04-15",
+        "reach": 16245,
+        "impressions": 42932,
+        "engagements": 1240,
+        "clicks": 631,
+        "applications": 43
+      },
+      {
+        "date": "2025-04-16",
+        "reach": 15188,
+        "impressions": 40138,
+        "engagements": 1159,
+        "clicks": 590,
+        "applications": 40
+      },
+      {
+        "date": "2025-04-17",
+        "reach": 23229,
+        "impressions": 61390,
+        "engagements": 1773,
+        "clicks": 903,
+        "applications": 62
+      },
+      {
+        "date": "2025-04-18",
+        "reach": 12791,
+        "impressions": 33803,
+        "engagements": 977,
+        "clicks": 497,
+        "applications": 34
+      },
+      {
+        "date": "2025-04-19",
+        "reach": 13014,
+        "impressions": 34392,
+        "engagements": 994,
+        "clicks": 506,
+        "applications": 35
+      },
+      {
+        "date": "2025-04-20",
+        "reach": 20153,
+        "impressions": 53260,
+        "engagements": 1539,
+        "clicks": 783,
+        "applications": 54
+      },
+      {
+        "date": "2025-04-21",
+        "reach": 18781,
+        "impressions": 49635,
+        "engagements": 1434,
+        "clicks": 730,
+        "applications": 50
+      },
+      {
+        "date": "2025-04-22",
+        "reach": 25196,
+        "impressions": 66587,
+        "engagements": 1924,
+        "clicks": 979,
+        "applications": 67
+      },
+      {
+        "date": "2025-04-23",
+        "reach": 16963,
+        "impressions": 44830,
+        "engagements": 1295,
+        "clicks": 659,
+        "applications": 45
+      },
+      {
+        "date": "2025-04-24",
+        "reach": 25362,
+        "impressions": 67026,
+        "engagements": 1936,
+        "clicks": 985,
+        "applications": 67
+      },
+      {
+        "date": "2025-04-25",
+        "reach": 15454,
+        "impressions": 40843,
+        "engagements": 1180,
+        "clicks": 600,
+        "applications": 41
+      },
+      {
+        "date": "2025-04-26",
+        "reach": 14736,
+        "impressions": 38943,
+        "engagements": 1125,
+        "clicks": 573,
+        "applications": 39
+      },
+      {
+        "date": "2025-04-27",
+        "reach": 19121,
+        "impressions": 50532,
+        "engagements": 1460,
+        "clicks": 743,
+        "applications": 51
+      },
+      {
+        "date": "2025-04-28",
+        "reach": 22145,
+        "impressions": 58526,
+        "engagements": 1691,
+        "clicks": 860,
+        "applications": 59
+      },
+      {
+        "date": "2025-04-29",
+        "reach": 26377,
+        "impressions": 69709,
+        "engagements": 2014,
+        "clicks": 1025,
+        "applications": 70
+      }
+    ],
+    "platforms": [
+      {
+        "key": "instagram",
+        "name": "Instagram",
+        "share": 34.2,
+        "reach": 165238,
+        "engagementRate": 7.8,
+        "clicks": 6421,
+        "applications": 482,
+        "costPerApplication": 10.82,
+        "ctr": 3.88
+      },
+      {
+        "key": "facebook",
+        "name": "Facebook",
+        "share": 26.8,
+        "reach": 129864,
+        "engagementRate": 6.2,
+        "clicks": 4832,
+        "applications": 351,
+        "costPerApplication": 12.47,
+        "ctr": 3.72
+      },
+      {
+        "key": "linkedin",
+        "name": "LinkedIn",
+        "share": 18.6,
+        "reach": 89412,
+        "engagementRate": 5.7,
+        "clicks": 3126,
+        "applications": 298,
+        "costPerApplication": 15.21,
+        "ctr": 3.5
+      },
+      {
+        "key": "tiktok",
+        "name": "TikTok",
+        "share": 12.4,
+        "reach": 59321,
+        "engagementRate": 8.9,
+        "clicks": 2947,
+        "applications": 121,
+        "costPerApplication": 9.82,
+        "ctr": 4.96
+      },
+      {
+        "key": "youtube",
+        "name": "YouTube",
+        "share": 8,
+        "reach": 38736,
+        "engagementRate": 4.1,
+        "clicks": 1423,
+        "applications": 32,
+        "costPerApplication": 18.34,
+        "ctr": 3.67
+      }
+    ],
+    "topPosts": [
+      {
+        "id": "p1",
+        "title": "Azubi bei uns – Deine Zukunft beginnt hier",
+        "platform": "instagram",
+        "type": "Reel",
+        "engagements": 8421,
+        "clicks": 1842,
+        "applications": 214,
+        "engagementRate": 9.2
+      },
+      {
+        "id": "p2",
+        "title": "#TeamPersonalwerk – Wir suchen dich",
+        "platform": "linkedin",
+        "type": "Bild",
+        "engagements": 6732,
+        "clicks": 1421,
+        "applications": 168,
+        "engagementRate": 6.4
+      },
+      {
+        "id": "p3",
+        "title": "Warum du bei uns arbeiten solltest",
+        "platform": "tiktok",
+        "type": "Video",
+        "engagements": 5218,
+        "clicks": 987,
+        "applications": 96,
+        "engagementRate": 8.1
+      },
+      {
+        "id": "p4",
+        "title": "Karriere starten – jetzt bewerben!",
+        "platform": "facebook",
+        "type": "Carousel",
+        "engagements": 4953,
+        "clicks": 1104,
+        "applications": 121,
+        "engagementRate": 5.8
+      },
+      {
+        "id": "p5",
+        "title": "Ein Blick hinter die Kulissen",
+        "platform": "youtube",
+        "type": "Video",
+        "engagements": 3176,
+        "clicks": 542,
+        "applications": 41,
+        "engagementRate": 4.3
+      },
+      {
+        "id": "p6",
+        "title": "Ausbildung 2025 – Jetzt bewerben",
+        "platform": "instagram",
+        "type": "Story",
+        "engagements": 2984,
+        "clicks": 618,
+        "applications": 54,
+        "engagementRate": 5.1
+      }
+    ],
+    "audiencePerformance": {
+      "age": [
+        {
+          "segment": "13–17",
+          "reach": 24128,
+          "engagement": 1842,
+          "clicks": 921,
+          "applications": 38
+        },
+        {
+          "segment": "18–24",
+          "reach": 168900,
+          "engagement": 14210,
+          "clicks": 7842,
+          "applications": 612
+        },
+        {
+          "segment": "25–34",
+          "reach": 142380,
+          "engagement": 11284,
+          "clicks": 6218,
+          "applications": 421
+        },
+        {
+          "segment": "35–44",
+          "reach": 78420,
+          "engagement": 5124,
+          "clicks": 2412,
+          "applications": 148
+        },
+        {
+          "segment": "45–54",
+          "reach": 46210,
+          "engagement": 2841,
+          "clicks": 1024,
+          "applications": 52
+        },
+        {
+          "segment": "55+",
+          "reach": 22533,
+          "engagement": 1541,
+          "clicks": 332,
+          "applications": 13
+        }
+      ],
+      "gender": [
+        {
+          "segment": "Weiblich",
+          "reach": 231634,
+          "engagement": 18220,
+          "clicks": 9012,
+          "applications": 601
+        },
+        {
+          "segment": "Männlich",
+          "reach": 236459,
+          "engagement": 17842,
+          "clicks": 9302,
+          "applications": 654
+        },
+        {
+          "segment": "Divers / k.A.",
+          "reach": 14478,
+          "engagement": 780,
+          "clicks": 435,
+          "applications": 29
+        }
+      ],
+      "location": [
+        {
+          "segment": "Nordrhein-Westfalen",
+          "reach": 137050,
+          "engagement": 10842,
+          "clicks": 5321,
+          "applications": 364
+        },
+        {
+          "segment": "Bayern",
+          "reach": 109543,
+          "engagement": 8642,
+          "clicks": 4212,
+          "applications": 291
+        },
+        {
+          "segment": "Baden-Württemberg",
+          "reach": 81072,
+          "engagement": 6218,
+          "clicks": 3104,
+          "applications": 216
+        },
+        {
+          "segment": "Hessen",
+          "reach": 68525,
+          "engagement": 5124,
+          "clicks": 2618,
+          "applications": 182
+        },
+        {
+          "segment": "Niedersachsen",
+          "reach": 46327,
+          "engagement": 3421,
+          "clicks": 1742,
+          "applications": 124
+        }
+      ],
+      "interests": [
+        {
+          "segment": "Handwerk & Technik",
+          "reach": 154422,
+          "engagement": 12840,
+          "clicks": 6210,
+          "applications": 432
+        },
+        {
+          "segment": "Verwaltung & Büro",
+          "reach": 118936,
+          "engagement": 9124,
+          "clicks": 4812,
+          "applications": 318
+        },
+        {
+          "segment": "IT & Digital",
+          "reach": 96514,
+          "engagement": 8420,
+          "clicks": 4218,
+          "applications": 289
+        },
+        {
+          "segment": "Soziales & Pflege",
+          "reach": 68210,
+          "engagement": 4212,
+          "clicks": 2104,
+          "applications": 142
+        },
+        {
+          "segment": "Logistik",
+          "reach": 44489,
+          "engagement": 2246,
+          "clicks": 1405,
+          "applications": 103
+        }
+      ]
+    },
+    "demographics": {
+      "gender": {
+        "female": 48,
+        "male": 49,
+        "diverse": 3
+      },
+      "topLocations": [
+        {
+          "name": "Nordrhein-Westfalen",
+          "percent": 28.4
+        },
+        {
+          "name": "Bayern",
+          "percent": 22.7
+        },
+        {
+          "name": "Baden-Württemberg",
+          "percent": 16.8
+        },
+        {
+          "name": "Hessen",
+          "percent": 14.2
+        },
+        {
+          "name": "Niedersachsen",
+          "percent": 9.6
+        }
+      ]
+    },
+    "costEfficiency": {
+      "budget": 20000,
+      "spent": 14820,
+      "remaining": 5180,
+      "cpc": 0.79,
+      "cpm": 11.62,
+      "cpa": 12.46,
+      "cpqa": 18.42,
+      "dailySeries": [
+        {
+          "date": "2025-03-31",
+          "cost": 299,
+          "cpc": 1.17,
+          "cpa": 16.63
+        },
+        {
+          "date": "2025-04-01",
+          "cost": 320,
+          "cpc": 1.15,
+          "cpa": 15.83
+        },
+        {
+          "date": "2025-04-02",
+          "cost": 343,
+          "cpc": 1.1,
+          "cpa": 15.64
+        },
+        {
+          "date": "2025-04-03",
+          "cost": 367,
+          "cpc": 1.14,
+          "cpa": 16.53
+        },
+        {
+          "date": "2025-04-04",
+          "cost": 360,
+          "cpc": 1.07,
+          "cpa": 16.16
+        },
+        {
+          "date": "2025-04-05",
+          "cost": 383,
+          "cpc": 1.06,
+          "cpa": 15.51
+        },
+        {
+          "date": "2025-04-06",
+          "cost": 376,
+          "cpc": 1.03,
+          "cpa": 14.86
+        },
+        {
+          "date": "2025-04-07",
+          "cost": 412,
+          "cpc": 1.03,
+          "cpa": 15.07
+        },
+        {
+          "date": "2025-04-08",
+          "cost": 424,
+          "cpc": 1.04,
+          "cpa": 15.66
+        },
+        {
+          "date": "2025-04-09",
+          "cost": 441,
+          "cpc": 1.02,
+          "cpa": 14.74
+        },
+        {
+          "date": "2025-04-10",
+          "cost": 456,
+          "cpc": 1,
+          "cpa": 14.86
+        },
+        {
+          "date": "2025-04-11",
+          "cost": 475,
+          "cpc": 0.99,
+          "cpa": 13.95
+        },
+        {
+          "date": "2025-04-12",
+          "cost": 487,
+          "cpc": 1.01,
+          "cpa": 14.27
+        },
+        {
+          "date": "2025-04-13",
+          "cost": 477,
+          "cpc": 1,
+          "cpa": 13.77
+        },
+        {
+          "date": "2025-04-14",
+          "cost": 514,
+          "cpc": 0.97,
+          "cpa": 14.03
+        },
+        {
+          "date": "2025-04-15",
+          "cost": 511,
+          "cpc": 0.96,
+          "cpa": 13.96
+        },
+        {
+          "date": "2025-04-16",
+          "cost": 544,
+          "cpc": 0.93,
+          "cpa": 13.53
+        },
+        {
+          "date": "2025-04-17",
+          "cost": 526,
+          "cpc": 0.89,
+          "cpa": 12.87
+        },
+        {
+          "date": "2025-04-18",
+          "cost": 567,
+          "cpc": 0.89,
+          "cpa": 13.32
+        },
+        {
+          "date": "2025-04-19",
+          "cost": 558,
+          "cpc": 0.87,
+          "cpa": 13.68
+        },
+        {
+          "date": "2025-04-20",
+          "cost": 561,
+          "cpc": 0.9,
+          "cpa": 13.03
+        },
+        {
+          "date": "2025-04-21",
+          "cost": 593,
+          "cpc": 0.83,
+          "cpa": 13.28
+        },
+        {
+          "date": "2025-04-22",
+          "cost": 587,
+          "cpc": 0.85,
+          "cpa": 12.67
+        },
+        {
+          "date": "2025-04-23",
+          "cost": 606,
+          "cpc": 0.8,
+          "cpa": 11.89
+        },
+        {
+          "date": "2025-04-24",
+          "cost": 650,
+          "cpc": 0.85,
+          "cpa": 12.4
+        },
+        {
+          "date": "2025-04-25",
+          "cost": 635,
+          "cpc": 0.8,
+          "cpa": 12.35
+        },
+        {
+          "date": "2025-04-26",
+          "cost": 652,
+          "cpc": 0.8,
+          "cpa": 12.28
+        },
+        {
+          "date": "2025-04-27",
+          "cost": 677,
+          "cpc": 0.76,
+          "cpa": 11.21
+        },
+        {
+          "date": "2025-04-28",
+          "cost": 695,
+          "cpc": 0.76,
+          "cpa": 10.96
+        },
+        {
+          "date": "2025-04-29",
+          "cost": 702,
+          "cpc": 0.78,
+          "cpa": 11.11
+        }
+      ]
+    },
+    "funnel": [
+      {
+        "key": "reach",
+        "label": "Reichweite",
+        "value": 482571
+      },
+      {
+        "key": "impressions",
+        "label": "Impressionen",
+        "value": 1275342
+      },
+      {
+        "key": "clicks",
+        "label": "Link-Klicks",
+        "value": 18749
+      },
+      {
+        "key": "landingpage",
+        "label": "Landingpage-Aufrufe",
+        "value": 4832
+      },
+      {
+        "key": "starts",
+        "label": "Bewerbungsstarts",
+        "value": 2146
+      },
+      {
+        "key": "applications",
+        "label": "Bewerbungen",
+        "value": 1284
+      },
+      {
+        "key": "qualified",
+        "label": "Qualifizierte Bewerbungen",
+        "value": 846
+      }
+    ],
+    "contentPerformance": [
+      {
+        "type": "Video",
+        "reach": 158420,
+        "engagementRate": 8.4,
+        "ctr": 4.42,
+        "applications": 412,
+        "costPerApplication": 10.12
+      },
+      {
+        "type": "Reel",
+        "reach": 142380,
+        "engagementRate": 9.1,
+        "ctr": 4.78,
+        "applications": 384,
+        "costPerApplication": 9.64
+      },
+      {
+        "type": "Bild",
+        "reach": 121840,
+        "engagementRate": 5.8,
+        "ctr": 3.21,
+        "applications": 218,
+        "costPerApplication": 14.82
+      },
+      {
+        "type": "Carousel",
+        "reach": 98214,
+        "engagementRate": 6.4,
+        "ctr": 3.68,
+        "applications": 162,
+        "costPerApplication": 13.24
+      },
+      {
+        "type": "Story",
+        "reach": 74128,
+        "engagementRate": 5.2,
+        "ctr": 2.94,
+        "applications": 68,
+        "costPerApplication": 16.48
+      },
+      {
+        "type": "Stellenanzeige",
+        "reach": 41220,
+        "engagementRate": 3.6,
+        "ctr": 2.41,
+        "applications": 34,
+        "costPerApplication": 19.86
+      },
+      {
+        "type": "Text",
+        "reach": 22187,
+        "engagementRate": 2.8,
+        "ctr": 1.92,
+        "applications": 6,
+        "costPerApplication": 24.1
+      }
+    ],
+    "postingHeatmap": [
+      {
+        "day": "Mo",
+        "hour": 6,
+        "value": 36
+      },
+      {
+        "day": "Mo",
+        "hour": 8,
+        "value": 30
+      },
+      {
+        "day": "Mo",
+        "hour": 10,
+        "value": 17
+      },
+      {
+        "day": "Mo",
+        "hour": 12,
+        "value": 20
+      },
+      {
+        "day": "Mo",
+        "hour": 14,
+        "value": 31
+      },
+      {
+        "day": "Mo",
+        "hour": 16,
+        "value": 28
+      },
+      {
+        "day": "Mo",
+        "hour": 18,
+        "value": 70
+      },
+      {
+        "day": "Mo",
+        "hour": 20,
+        "value": 24
+      },
+      {
+        "day": "Mo",
+        "hour": 22,
+        "value": 44
+      },
+      {
+        "day": "Di",
+        "hour": 6,
+        "value": 44
+      },
+      {
+        "day": "Di",
+        "hour": 8,
+        "value": 33
+      },
+      {
+        "day": "Di",
+        "hour": 10,
+        "value": 34
+      },
+      {
+        "day": "Di",
+        "hour": 12,
+        "value": 37
+      },
+      {
+        "day": "Di",
+        "hour": 14,
+        "value": 29
+      },
+      {
+        "day": "Di",
+        "hour": 16,
+        "value": 31
+      },
+      {
+        "day": "Di",
+        "hour": 18,
+        "value": 35
+      },
+      {
+        "day": "Di",
+        "hour": 20,
+        "value": 34
+      },
+      {
+        "day": "Di",
+        "hour": 22,
+        "value": 17
+      },
+      {
+        "day": "Mi",
+        "hour": 6,
+        "value": 25
+      },
+      {
+        "day": "Mi",
+        "hour": 8,
+        "value": 45
+      },
+      {
+        "day": "Mi",
+        "hour": 10,
+        "value": 34
+      },
+      {
+        "day": "Mi",
+        "hour": 12,
+        "value": 26
+      },
+      {
+        "day": "Mi",
+        "hour": 14,
+        "value": 36
+      },
+      {
+        "day": "Mi",
+        "hour": 16,
+        "value": 23
+      },
+      {
+        "day": "Mi",
+        "hour": 18,
+        "value": 58
+      },
+      {
+        "day": "Mi",
+        "hour": 20,
+        "value": 67
+      },
+      {
+        "day": "Mi",
+        "hour": 22,
+        "value": 22
+      },
+      {
+        "day": "Do",
+        "hour": 6,
+        "value": 16
+      },
+      {
+        "day": "Do",
+        "hour": 8,
+        "value": 31
+      },
+      {
+        "day": "Do",
+        "hour": 10,
+        "value": 38
+      },
+      {
+        "day": "Do",
+        "hour": 12,
+        "value": 41
+      },
+      {
+        "day": "Do",
+        "hour": 14,
+        "value": 22
+      },
+      {
+        "day": "Do",
+        "hour": 16,
+        "value": 38
+      },
+      {
+        "day": "Do",
+        "hour": 18,
+        "value": 70
+      },
+      {
+        "day": "Do",
+        "hour": 20,
+        "value": 32
+      },
+      {
+        "day": "Do",
+        "hour": 22,
+        "value": 15
+      },
+      {
+        "day": "Fr",
+        "hour": 6,
+        "value": 22
+      },
+      {
+        "day": "Fr",
+        "hour": 8,
+        "value": 20
+      },
+      {
+        "day": "Fr",
+        "hour": 10,
+        "value": 28
+      },
+      {
+        "day": "Fr",
+        "hour": 12,
+        "value": 26
+      },
+      {
+        "day": "Fr",
+        "hour": 14,
+        "value": 38
+      },
+      {
+        "day": "Fr",
+        "hour": 16,
+        "value": 23
+      },
+      {
+        "day": "Fr",
+        "hour": 18,
+        "value": 26
+      },
+      {
+        "day": "Fr",
+        "hour": 20,
+        "value": 34
+      },
+      {
+        "day": "Fr",
+        "hour": 22,
+        "value": 25
+      },
+      {
+        "day": "Sa",
+        "hour": 6,
+        "value": 11
+      },
+      {
+        "day": "Sa",
+        "hour": 8,
+        "value": 28
+      },
+      {
+        "day": "Sa",
+        "hour": 10,
+        "value": 11
+      },
+      {
+        "day": "Sa",
+        "hour": 12,
+        "value": 35
+      },
+      {
+        "day": "Sa",
+        "hour": 14,
+        "value": 12
+      },
+      {
+        "day": "Sa",
+        "hour": 16,
+        "value": 25
+      },
+      {
+        "day": "Sa",
+        "hour": 18,
+        "value": 24
+      },
+      {
+        "day": "Sa",
+        "hour": 20,
+        "value": 44
+      },
+      {
+        "day": "Sa",
+        "hour": 22,
+        "value": 17
+      },
+      {
+        "day": "So",
+        "hour": 6,
+        "value": 18
+      },
+      {
+        "day": "So",
+        "hour": 8,
+        "value": 22
+      },
+      {
+        "day": "So",
+        "hour": 10,
+        "value": 20
+      },
+      {
+        "day": "So",
+        "hour": 12,
+        "value": 30
+      },
+      {
+        "day": "So",
+        "hour": 14,
+        "value": 26
+      },
+      {
+        "day": "So",
+        "hour": 16,
+        "value": 25
+      },
+      {
+        "day": "So",
+        "hour": 18,
+        "value": 30
+      },
+      {
+        "day": "So",
+        "hour": 20,
+        "value": 27
+      },
+      {
+        "day": "So",
+        "hour": 22,
+        "value": 23
+      }
+    ],
+    "community": {
+      "positive": 78,
+      "neutral": 17,
+      "negative": 5,
+      "topThemes": [
+        {
+          "label": "Ausbildungsvergütung",
+          "sentiment": "positive"
+        },
+        {
+          "label": "Übernahmechancen",
+          "sentiment": "positive"
+        },
+        {
+          "label": "Bewerbungsprozess",
+          "sentiment": "neutral"
+        },
+        {
+          "label": "Standort/Erreichbarkeit",
+          "sentiment": "negative"
+        }
+      ],
+      "commonQuestions": [
+        "Ab wann kann ich mich für 2026 bewerben?",
+        "Ist ein Praktikum vorher Pflicht?",
+        "Wie läuft das Auswahlverfahren ab?"
+      ]
+    },
+    "recommendations": [
+      {
+        "type": "positive",
+        "title": "Reichweite deutlich gestiegen",
+        "text": "Die Kampagne erzielt 68,4 % mehr Reichweite als im Vergleichszeitraum."
+      },
+      {
+        "type": "positive",
+        "title": "TikTok erzielt höchste Engagement Rate",
+        "text": "8,9 % Engagement Rate — deutlich über dem Kampagnendurchschnitt."
+      },
+      {
+        "type": "positive",
+        "title": "Instagram generiert die meisten Bewerbungen",
+        "text": "482 Bewerbungen über Instagram — mehr als jede andere Plattform."
+      },
+      {
+        "type": "positive",
+        "title": "CPA verbessert",
+        "text": "Kosten pro Bewerbung um 28,3 % reduziert gegenüber dem Vormonat."
+      },
+      {
+        "type": "info",
+        "title": "Empfehlung",
+        "text": "Budgetanteil für TikTok und Instagram erhöhen — beste Kosten-Nutzen-Relation."
+      },
+      {
+        "type": "info",
+        "title": "Empfehlung",
+        "text": "Video-Content zwischen 18:00 und 21:00 Uhr stärker einsetzen."
+      }
+    ]
+  },
+  "campaignComparison": [
+    {
+      "name": "Azubi-Kampagne 2025",
+      "reach": 482571,
+      "engagement": 36842,
+      "clicks": 18749,
+      "applications": 1284,
+      "budget": 20000,
+      "cpa": 12.46,
+      "ctr": 3.88,
+      "conversionRate": 6.85
+    },
+    {
+      "name": "Fachkräfte-Kampagne",
+      "reach": 318420,
+      "engagement": 21840,
+      "clicks": 11248,
+      "applications": 542,
+      "budget": 24000,
+      "cpa": 24.12,
+      "ctr": 3.53,
+      "conversionRate": 4.82
+    },
+    {
+      "name": "Employer-Branding-Kampagne",
+      "reach": 621840,
+      "engagement": 48210,
+      "clicks": 9842,
+      "applications": 218,
+      "budget": 18000,
+      "cpa": 45.87,
+      "ctr": 1.58,
+      "conversionRate": 2.21
+    },
+    {
+      "name": "Recruiting-Kampagne Q2",
+      "reach": 264180,
+      "engagement": 16420,
+      "clicks": 8421,
+      "applications": 486,
+      "budget": 15000,
+      "cpa": 20.58,
+      "ctr": 3.19,
+      "conversionRate": 5.77
+    }
+  ]
+}

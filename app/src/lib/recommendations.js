@@ -4,7 +4,7 @@ import {
   buildBoardPricing,
   buildFunnel,
   buildBoardList,
-  computePassgenauigkeit,
+  computeAdEfficiency,
   computePortfolioMedianConversion,
   getRemainingRuntimeDays,
 } from "@/lib/funnel";
@@ -23,10 +23,10 @@ function pct(ratio) {
   return `${Math.round(ratio * 100)} %`;
 }
 
-// Regel A — Passgenauigkeit "Handlungsbedarf" + geringe Restlaufzeit.
-// Echte Daten: computePassgenauigkeit (Cluster-Vergleich), Restlaufzeit je Börse.
+// Regel A — Effizienz "Handlungsbedarf" + geringe Restlaufzeit.
+// Echte Daten: computeAdEfficiency (Cluster-Vergleich), Restlaufzeit je Börse.
 function ruleAnzeigenoptimierung(ad) {
-  const pass = computePassgenauigkeit(ad);
+  const pass = computeAdEfficiency(ad);
   if (!pass || pass.tier !== "action") return null;
 
   const boards = buildBoardList(ad);
@@ -45,18 +45,20 @@ function ruleAnzeigenoptimierung(ad) {
     metrics: [
       { label: "Eigene Klicks", value: pass.ownValue.toLocaleString("de-DE") },
       { label: "Cluster-Median", value: pass.clusterMedian.toLocaleString("de-DE") },
-      { label: "Passgenauigkeit", value: ownPct },
+      { label: "Effizienz", value: ownPct },
       { label: "Restlaufzeit", value: `${maxRemaining} Tage` },
     ],
     datenbasis: "Eigene Klicks im Verhältnis zum Cluster-Median vergleichbarer Anzeigen (echte Messdaten).",
     actionLabel: "Anzeige ansehen",
+    remainingDays: maxRemaining,
+    efficiencyRatio: pass.ratio,
   };
 }
 
-// Regel D — Passgenauigkeit "Top" kurz vor Laufzeitende: Verlängerung sinnvoll.
+// Regel D — Effizienz "Top" kurz vor Laufzeitende: Verlängerung sinnvoll.
 function ruleLaufzeitVerlaengern(ad) {
   if (ad.status !== "active") return null;
-  const pass = computePassgenauigkeit(ad);
+  const pass = computeAdEfficiency(ad);
   if (!pass || pass.tier !== "top") return null;
 
   const boards = buildBoardList(ad);
@@ -72,11 +74,13 @@ function ruleLaufzeitVerlaengern(ad) {
     title: "Laufzeit verlängern",
     reasoning: `Die Anzeige performt mit ${pct(pass.ratio)} des Cluster-Medians deutlich überdurchschnittlich, endet aber in nur noch ${maxRemaining} Tagen. Eine Verlängerung sichert die starke Performance.`,
     metrics: [
-      { label: "Passgenauigkeit", value: pct(pass.ratio) },
+      { label: "Effizienz", value: pct(pass.ratio) },
       { label: "Restlaufzeit", value: `${maxRemaining} Tage` },
     ],
     datenbasis: "Eigene Klicks im Verhältnis zum Cluster-Median vergleichbarer Anzeigen (echte Messdaten).",
     actionLabel: "Anzeige ansehen",
+    remainingDays: maxRemaining,
+    efficiencyRatio: pass.ratio,
   };
 }
 

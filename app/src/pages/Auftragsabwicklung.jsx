@@ -51,10 +51,25 @@ export default function Auftragsabwicklung() {
       </p>
 
       <Tabs defaultValue="angebote">
-        <TabsList>
-          <TabsTrigger value="angebote">Angebote</TabsTrigger>
-          <TabsTrigger value="auftraege">Aufträge</TabsTrigger>
-          <TabsTrigger value="rechnungen">Rechnungen</TabsTrigger>
+        <TabsList className="mb-6 inline-flex h-auto w-fit gap-1 rounded-lg border border-border bg-muted p-1">
+          <TabsTrigger
+            className="rounded-md px-5 py-2 text-sm font-medium text-muted-foreground shadow-none transition-colors hover:text-foreground data-active:bg-[var(--pw-navy-800)] data-active:text-white data-active:shadow-sm data-active:hover:text-white"
+            value="angebote"
+          >
+            Angebote
+          </TabsTrigger>
+          <TabsTrigger
+            className="rounded-md px-5 py-2 text-sm font-medium text-muted-foreground shadow-none transition-colors hover:text-foreground data-active:bg-[var(--pw-navy-800)] data-active:text-white data-active:shadow-sm data-active:hover:text-white"
+            value="auftraege"
+          >
+            Aufträge
+          </TabsTrigger>
+          <TabsTrigger
+            className="rounded-md px-5 py-2 text-sm font-medium text-muted-foreground shadow-none transition-colors hover:text-foreground data-active:bg-[var(--pw-navy-800)] data-active:text-white data-active:shadow-sm data-active:hover:text-white"
+            value="rechnungen"
+          >
+            Rechnungen
+          </TabsTrigger>
         </TabsList>
         <TabsContent value="angebote">
           <RecordTable numberLabel="Angebotsnr." rows={quotes} />

@@ -111,16 +111,16 @@ export function findBiggestFunnelDropOff(portfolioFunnel) {
 
 // Die Cluster-Serie reicht bis zum Ende der gebuchten Laufzeit und enthält für
 // noch nicht erreichte Tage einen eingefrorenen Own-Wert samt hochgerechnetem
-// Median. Für Anzeige und Passgenauigkeit zählen nur bereits verstrichene Tage.
+// Median. Für Anzeige und Effizienz zählen nur bereits verstrichene Tage.
 export function getClusterSeriesToDate(ad) {
   const series = ad.cluster?.series || [];
   const today = Date.now();
   return series.filter((point) => new Date(point.date).getTime() <= today);
 }
 
-// Passgenauigkeit: eigener Endwert der Klicks im Verhältnis zum Cluster-Median
+// Effizienz: eigener Endwert der Klicks im Verhältnis zum Cluster-Median
 // vergleichbarer Anzeigen (echte Daten aus /export/cluster/advertisement/{id}).
-export function computePassgenauigkeit(ad) {
+export function computeAdEfficiency(ad) {
   const series = getClusterSeriesToDate(ad);
   if (!series.length) return null;
   const last = series[series.length - 1];
@@ -130,16 +130,79 @@ export function computePassgenauigkeit(ad) {
   if (ratio >= 1.15) tier = "top";
   else if (ratio >= 0.85) tier = "watch";
   else tier = "action";
-  // 0.5x median -> 1 star, 1x median -> 3 stars, >=1.5x median -> 5 stars
-  const stars = Math.max(1, Math.min(5, Math.round(ratio * 3)));
-  return { ratio, tier, stars, ownValue: last.own, clusterMedian: last.clusterMedian };
+  return { ratio, tier, ownValue: last.own, clusterMedian: last.clusterMedian };
 }
 
-export const PASSGENAUIGKEIT_TIER = {
+export const EFFICIENCY_TIER = {
   top: { label: "Top", description: "Performt deutlich besser als vergleichbare Anzeigen." },
   watch: { label: "Beobachten", description: "Performt im Bereich vergleichbarer Anzeigen." },
   action: { label: "Handlungsbedarf", description: "Performt unter vergleichbaren Anzeigen." },
 };
+
+const DAILY_SOURCE_KEYS = {
+  clicks: "dailyClicksOwn",
+  applicationClicks: "dailyApplicationClicksOwn",
+};
+
+// Tagesreihe je Funnel-Stufe: für Klicks und Gestartete Bewerbungen liegen
+// echte Tageswerte vor (eigene Messung). Für Impressions/Hits/Interaktionen
+// gibt es keine Tagesgranularität — der echte Gesamtwert (Hauptwert-Regel)
+// wird anhand der realen Klick-Tageskurve verteilt und deutlich als
+// Schätzung ausgewiesen, statt eine erfundene Tagesform vorzutäuschen.
+export function buildDailySeries(ad, stageKey) {
+  const sourceKey = DAILY_SOURCE_KEYS[stageKey];
+  if (sourceKey) {
+    return { data: ad[sourceKey] || [], isEstimated: false };
+  }
+
+  const clicksDaily = ad.dailyClicksOwn || [];
+  const clicksTotal = clicksDaily.reduce((sum, p) => sum + (p.value ?? 0), 0);
+  const stage = buildFunnel(ad).find((s) => s.key === stageKey);
+  const total = stage?.value;
+  if (!clicksTotal || total == null) return { data: [], isEstimated: true };
+
+  const data = clicksDaily.map((point) => ({
+    date: point.date,
+    value: point.value != null ? Math.round((point.value / clicksTotal) * total) : null,
+  }));
+  return { data, isEstimated: true };
+}
+
+// Skalierungsfaktor für Cluster-Vergleichsdaten anderer Stufen als Klicks:
+// echter Gesamtwert der Stufe (Hauptwert-Regel) / echter Klicks-Gesamtwert
+// (letzter Punkt der eigenen Cluster-Serie). null, wenn keine Berechnungs-
+// grundlage vorhanden ist.
+export function getClusterScaleFactor(ad, stageKey) {
+  if (stageKey === "clicks") return 1;
+  const series = getClusterSeriesToDate(ad);
+  const lastOwn = series[series.length - 1]?.own;
+  const total = buildFunnel(ad).find((s) => s.key === stageKey)?.value;
+  if (!lastOwn || total == null) return null;
+  return total / lastOwn;
+}
+
+// Cluster-Vergleichsreihe (eigene Anzeige vs. Median) je Funnel-Stufe. Echte
+// Wettbewerbsvergleichsdaten liegen nur für Klicks vor (siehe
+// getClusterSeriesToDate). Für die übrigen Stufen werden eigene Kurve und
+// Cluster-Median im gleichen Verhältnis wie bei Klicks skaliert und deutlich
+// als Schätzung ausgewiesen — es gibt keine echten Vergleichsdaten für diese
+// Stufen.
+export function buildClusterComparisonSeries(ad, stageKey) {
+  const series = getClusterSeriesToDate(ad);
+  if (stageKey === "clicks" || !series.length) {
+    return { series, isEstimated: false };
+  }
+
+  const factor = getClusterScaleFactor(ad, stageKey);
+  if (factor == null) return { series: [], isEstimated: true };
+
+  const scaled = series.map((point) => ({
+    date: point.date,
+    own: point.own != null ? Math.round(point.own * factor) : null,
+    clusterMedian: point.clusterMedian != null ? Math.round(point.clusterMedian * factor) : null,
+  }));
+  return { series: scaled, isEstimated: true };
+}
 
 export function formatNumber(n) {
   if (n == null) return "–";
@@ -347,6 +410,80 @@ export function buildCostMetrics(ad) {
   });
 }
 
+// Tägliches Cluster-Median-Volumen je Kennzahl: Delta der echten kumulierten
+// Cluster-Median-Serie (nur für Klicks real, andere Kennzahlen über denselben
+// Faktor wie beim Cluster-Vergleich hochgerechnet — siehe getClusterScaleFactor).
+function buildMedianDailyVolume(ad, metricKey) {
+  const clusterSeries = getClusterSeriesToDate(ad);
+  const factor = getClusterScaleFactor(ad, metricKey) ?? 1;
+  const byDate = new Map();
+  clusterSeries.forEach((point, i) => {
+    if (point.clusterMedian == null) return;
+    const prev = i > 0 ? (clusterSeries[i - 1].clusterMedian ?? 0) : 0;
+    byDate.set(point.date.slice(0, 10), Math.max(0, point.clusterMedian - prev) * factor);
+  });
+  return byDate;
+}
+
+// Tagesreihe der Kosten je Einheit (Daily-Sicht): festes Tagesbudget
+// (Gesamtpreis / Laufzeit) geteilt durch das jeweilige Tagesvolumen —
+// dieselbe Formel wie die bestehende Lifetime-Logik (gleiches Budget bei
+// median-üblicher Kennzahl), nur auf Tagesebene statt als Einzelwert.
+export function buildDailyCostSeries(ad, metricKey) {
+  const metricDef = COST_METRICS.find((m) => m.key === metricKey);
+  const totalCost = ad.order?.grossTotal != null ? Number(ad.order.grossTotal) : null;
+  const runtimeDays = getRuntimeDays(ad);
+  if (!metricDef || !totalCost || !runtimeDays) return { data: [], isEstimated: false };
+
+  const dailyBudget = totalCost / runtimeDays;
+  const multiplier = metricDef.multiplier || 1;
+  const ownDaily = buildDailySeries(ad, metricKey);
+  const medianDailyByDate = buildMedianDailyVolume(ad, metricKey);
+
+  const data = ownDaily.data.map((point) => {
+    const medianVolume = medianDailyByDate.get(point.date.slice(0, 10));
+    return {
+      date: point.date,
+      own: point.value ? (dailyBudget / point.value) * multiplier : null,
+      clusterMedian: medianVolume ? (dailyBudget / medianVolume) * multiplier : null,
+    };
+  });
+
+  return { data, isEstimated: ownDaily.isEstimated };
+}
+
+// Kumulierte Kosten je Einheit bis zum jeweiligen Tag (Lifetime-Sicht):
+// bislang laufzeitanteilig verbrauchtes Budget geteilt durch die bis dahin
+// kumulierte Menge — geglättete Gegenperspektive zur täglich schwankenden
+// Daily-Sicht.
+export function buildLifetimeCostSeries(ad, metricKey) {
+  const metricDef = COST_METRICS.find((m) => m.key === metricKey);
+  const totalCost = ad.order?.grossTotal != null ? Number(ad.order.grossTotal) : null;
+  const runtimeDays = getRuntimeDays(ad);
+  if (!metricDef || !totalCost || !runtimeDays) return { data: [], isEstimated: false };
+
+  const multiplier = metricDef.multiplier || 1;
+  const ownDaily = buildDailySeries(ad, metricKey);
+  const medianDailyByDate = buildMedianDailyVolume(ad, metricKey);
+
+  let ownCumulative = 0;
+  let medianCumulative = 0;
+  let elapsedDays = 0;
+  const data = ownDaily.data.map((point) => {
+    elapsedDays += 1;
+    ownCumulative += point.value ?? 0;
+    medianCumulative += medianDailyByDate.get(point.date.slice(0, 10)) ?? 0;
+    const spentSoFar = totalCost * (Math.min(elapsedDays, runtimeDays) / runtimeDays);
+    return {
+      date: point.date,
+      own: ownCumulative ? (spentSoFar / ownCumulative) * multiplier : null,
+      clusterMedian: medianCumulative ? (spentSoFar / medianCumulative) * multiplier : null,
+    };
+  });
+
+  return { data, isEstimated: ownDaily.isEstimated };
+}
+
 // Mock-Preisliste je Stellenbörsen-Produkt (Listenpreis/UVP sowie der beim
 // Kauf als Teil eines Pakets übliche Paketpreis). Es liegen keine echten
 // Preislisten-Daten je Börse vor, daher sind dies plausible Demo-Werte,
@@ -375,16 +512,17 @@ function getProductPricing(product) {
 }
 
 // Tabelle je gebuchter Stellenbörse: Listenpreis (UVP) und Paketpreis laut
-// Preisliste, Anteil des UVP an allen UVPs im Paket (in Prozent) sowie der
-// anteilige TKP auf Basis des tatsächlich gezahlten Gesamtpreises (gewichtet
-// nach diesem UVP-Anteil) und des laufzeitgewichteten Impressions-Anteils
+// Preisliste, Anteil des UVP an allen UVPs im Paket (in Prozent) sowie die
+// anteiligen Kosten je Kennzahl (TKP, Kosten pro Klick/Hit/Interaktion/
+// Bewerbung) auf Basis des tatsächlich gezahlten Gesamtpreises (gewichtet
+// nach diesem UVP-Anteil) und des laufzeitgewichteten Mengen-Anteils
 // (siehe buildBoardBreakdown für dieselbe Gewichtungslogik).
 export function buildBoardPricing(ad) {
   const products = ad.products || [];
   if (!products.length) return [];
 
   const totalCost = ad.order?.grossTotal != null ? Number(ad.order.grossTotal) : null;
-  const totalImpressions = buildFunnel(ad).find((s) => s.key === "impressions")?.value ?? null;
+  const funnel = buildFunnel(ad);
 
   const days = products.map((p) => {
     const match = p.match(PRODUCT_DAYS_RE);
@@ -400,15 +538,22 @@ export function buildBoardPricing(ad) {
     const uvpShare = uvpSum > 0 ? uvp / uvpSum : 1 / products.length;
     const anteilGesamtpreisEuro = totalCost != null ? totalCost * uvpShare : null;
     const dayWeight = days[i] / totalDays;
-    const impressions = totalImpressions != null ? totalImpressions * dayWeight : null;
-    const tkp = anteilGesamtpreisEuro != null && impressions ? (anteilGesamtpreisEuro / impressions) * 1000 : null;
+
+    const costs = {};
+    COST_METRICS.forEach((metric) => {
+      const total = funnel.find((s) => s.key === metric.key)?.value ?? null;
+      const count = total != null ? total * dayWeight : null;
+      const multiplier = metric.multiplier || 1;
+      costs[metric.key] = anteilGesamtpreisEuro != null && count ? (anteilGesamtpreisEuro / count) * multiplier : null;
+    });
+
     return {
       product,
       board: resolveBoardName(product),
       uvp,
       anteilGesamtpreisPercent: uvpShare * 100,
       preisImPaket,
-      tkp,
+      costs,
     };
   });
 }
@@ -440,13 +585,10 @@ export function computePortfolioMedianConversion(ads) {
   return median(ratios);
 }
 
-// Aggregierte Tages-Klicks (eigene Messung) über alle Anzeigen hinweg, für
-// die Zeitverlauf-Ansicht auf der Übersicht. Reale Tagesdaten je Anzeige,
-// nur nach Datum aufsummiert.
-export function buildPortfolioDailyClicks(ads) {
+function sumDailyBySourceKey(ads, sourceKey) {
   const byDate = new Map();
   for (const ad of ads) {
-    for (const point of ad.dailyClicksOwn || []) {
+    for (const point of ad[sourceKey] || []) {
       if (point.value == null) continue;
       const key = point.date.slice(0, 10);
       byDate.set(key, (byDate.get(key) ?? 0) + point.value);
@@ -455,6 +597,36 @@ export function buildPortfolioDailyClicks(ads) {
   return [...byDate.entries()]
     .sort(([a], [b]) => a.localeCompare(b))
     .map(([date, value]) => ({ date, value }));
+}
+
+// Aggregierte Tages-Klicks (eigene Messung) über alle Anzeigen hinweg, für
+// die Zeitverlauf-Ansicht auf der Übersicht. Reale Tagesdaten je Anzeige,
+// nur nach Datum aufsummiert.
+export function buildPortfolioDailyClicks(ads) {
+  return sumDailyBySourceKey(ads, "dailyClicksOwn");
+}
+
+// Portfolioweite Tagesreihe je Funnel-Stufe, analog zu buildDailySeries: für
+// Klicks und Gestartete Bewerbungen echte, aufsummierte Tageswerte. Für
+// Impressions/Hits/Interaktionen (keine Tagesgranularität) wird der echte
+// Portfolio-Gesamtwert (buildPortfolioFunnel) anhand der aufsummierten
+// Klick-Tageskurve verteilt und als Schätzung ausgewiesen.
+export function buildPortfolioDailySeries(ads, stageKey) {
+  const sourceKey = DAILY_SOURCE_KEYS[stageKey];
+  if (sourceKey) {
+    return { data: sumDailyBySourceKey(ads, sourceKey), isEstimated: false };
+  }
+
+  const clicksDaily = sumDailyBySourceKey(ads, "dailyClicksOwn");
+  const clicksTotal = clicksDaily.reduce((sum, p) => sum + (p.value ?? 0), 0);
+  const total = buildPortfolioFunnel(ads).find((s) => s.key === stageKey)?.value;
+  if (!clicksTotal || total == null) return { data: [], isEstimated: true };
+
+  const data = clicksDaily.map((point) => ({
+    date: point.date,
+    value: Math.round((point.value / clicksTotal) * total),
+  }));
+  return { data, isEstimated: true };
 }
 
 // Tages-Klickverlauf für eine einzelne Börse, über alle Anzeigen aggregiert.
@@ -544,14 +716,14 @@ export function buildPortfolioBoardPerformance(ads) {
 }
 
 // Vereinfachtes Qualitätssignal (0-100) aus zwei bereits im Produkt
-// etablierten, echten Kennzahlen: Anteil Anzeigen mit Passgenauigkeit
+// etablierten, echten Kennzahlen: Anteil Anzeigen mit Effizienz
 // "Top"/"Beobachten" (60%) und Anteil Anzeigen mit Bewerbungsstart-Quote
 // im/über dem Portfolio-Median (40%). Deckt bewusst nur die Dimensionen ab,
 // für die echte Daten vorliegen — weitere Faktoren aus einem vollständigen
 // Empfehlungs-Score (Skill-/Zielgruppenpassung im Detail, regionale Eignung,
 // Kosteneffizienz je Börse) folgen erst mit entsprechender Datengrundlage.
 export function computeQualityScore(ads) {
-  const passResults = ads.map((ad) => computePassgenauigkeit(ad)).filter(Boolean);
+  const passResults = ads.map((ad) => computeAdEfficiency(ad)).filter(Boolean);
   const topShare = passResults.length ? passResults.filter((p) => p.tier !== "action").length / passResults.length : null;
 
   const medianConversion = computePortfolioMedianConversion(ads);

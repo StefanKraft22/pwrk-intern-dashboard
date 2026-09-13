@@ -35,7 +35,7 @@ export default function QualitySignalCard({ quality, topBoard, bestConversionBoa
             {bestConversionBoard && bestConversionBoard.board !== topBoard.board && `, ${bestConversionBoard.board} erzielt die beste Conversion`}.{" "}
           </>
         )}
-        Basiert auf {Math.round((quality.topShare ?? 0) * 100)} % Anzeigen mit guter bis Top-Passgenauigkeit und{" "}
+        Basiert auf {Math.round((quality.topShare ?? 0) * 100)} % Anzeigen mit guter bis Top-Effizienz und{" "}
         {Math.round((quality.convShare ?? 0) * 100)} % Anzeigen mit Bewerbungsstart-Quote im bzw. über dem Portfolio-Median.
       </p>
 
@@ -47,7 +47,7 @@ export default function QualitySignalCard({ quality, topBoard, bestConversionBoa
       {expanded && (
         <div className="mt-3 rounded-lg border border-border bg-muted/40 p-3 text-xs text-muted-foreground">
           <p className="mb-1.5">
-            <span className="font-medium text-foreground">60 % Passgenauigkeit:</span> Anteil Anzeigen mit Cluster-Vergleich "Top" oder "Beobachten"
+            <span className="font-medium text-foreground">60 % Effizienz:</span> Anteil Anzeigen mit Cluster-Vergleich "Top" oder "Beobachten"
             statt "Handlungsbedarf" ({Math.round((quality.topShare ?? 0) * 100)} %).
           </p>
           <p className="mb-1.5">

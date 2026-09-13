@@ -1,5 +1,5 @@
 import { useMemo, useState } from "react";
-import { CATEGORIES, generateRecommendations } from "@/lib/recommendations";
+import { CATEGORIES, generateRecommendations, PRIORITY_ORDER } from "@/lib/recommendations";
 import { useRecommendationStatus } from "@/lib/useRecommendationStatus";
 import RecommendationCard from "@/components/dashboard/RecommendationCard";
 import { Card } from "@/components/ui/card";
@@ -7,9 +7,36 @@ import { cn } from "@/lib/utils";
 
 const ALL_RECOMMENDATIONS = generateRecommendations();
 
+// null/undefined werden bei allen Sortierungen ans Ende gestellt, statt als
+// kleinster Wert vorne zu erscheinen (z. B. Empfehlungen ohne Restlaufzeit-Bezug).
+const SORT_OPTIONS = [
+  { key: "prioritaet", label: "Priorität", compare: (a, b) => PRIORITY_ORDER[a.priority] - PRIORITY_ORDER[b.priority] },
+  {
+    key: "restlaufzeit",
+    label: "Restlaufzeit",
+    compare: (a, b) => {
+      if (a.remainingDays == null && b.remainingDays == null) return 0;
+      if (a.remainingDays == null) return 1;
+      if (b.remainingDays == null) return -1;
+      return a.remainingDays - b.remainingDays;
+    },
+  },
+  {
+    key: "optimierungsnotwendigkeit",
+    label: "Optimierungsnotwendigkeit",
+    compare: (a, b) => {
+      if (a.efficiencyRatio == null && b.efficiencyRatio == null) return 0;
+      if (a.efficiencyRatio == null) return 1;
+      if (b.efficiencyRatio == null) return -1;
+      return a.efficiencyRatio - b.efficiencyRatio;
+    },
+  },
+];
+
 export default function Empfehlungen() {
   const [statusMap, setStatus] = useRecommendationStatus();
   const [categoryFilter, setCategoryFilter] = useState("alle");
+  const [sortKey, setSortKey] = useState("prioritaet");
 
   const openRecs = ALL_RECOMMENDATIONS.filter((r) => statusMap[r.id] !== "done" && statusMap[r.id] !== "dismissed");
   const doneCount = ALL_RECOMMENDATIONS.filter((r) => statusMap[r.id] === "done").length;
@@ -22,13 +49,17 @@ export default function Empfehlungen() {
     return counts;
   }, [openRecs]);
 
-  const visible = ALL_RECOMMENDATIONS.filter((r) => categoryFilter === "alle" || r.categoryKey === categoryFilter);
+  const visible = useMemo(() => {
+    const filtered = ALL_RECOMMENDATIONS.filter((r) => categoryFilter === "alle" || r.categoryKey === categoryFilter);
+    const sort = SORT_OPTIONS.find((s) => s.key === sortKey) ?? SORT_OPTIONS[0];
+    return [...filtered].sort(sort.compare);
+  }, [categoryFilter, sortKey]);
 
   return (
     <div className="w-full px-6 py-6">
       <h1 className="mb-1 font-heading text-xl font-medium text-foreground">Empfehlungen</h1>
       <p className="mb-6 text-sm text-muted-foreground">
-        Regelbasiert aus echten Kennzahlen abgeleitet — Passgenauigkeit, Kosten je Börse, Klick-/Bewerbungsverhältnis. Keine Empfehlungen für Bereiche
+        Regelbasiert aus echten Kennzahlen abgeleitet — Effizienz, Kosten je Börse, Klick-/Bewerbungsverhältnis. Keine Empfehlungen für Bereiche
         ohne Datengrundlage (z. B. Social Media, Employer Branding).
       </p>
 
@@ -77,10 +108,27 @@ export default function Empfehlungen() {
         ))}
       </div>
 
+      <div className="mb-4 flex flex-wrap items-center gap-1.5">
+        <span className="text-xs font-medium text-muted-foreground">Sortieren nach:</span>
+        {SORT_OPTIONS.map((option) => (
+          <button
+            className={cn(
+              "rounded-full border px-3 py-1.5 text-xs font-medium transition-colors",
+              sortKey === option.key ? "border-[var(--pw-navy-800)] bg-[var(--pw-navy-800)] text-white" : "border-border bg-card text-muted-foreground hover:text-foreground"
+            )}
+            key={option.key}
+            onClick={() => setSortKey(option.key)}
+            type="button"
+          >
+            {option.label}
+          </button>
+        ))}
+      </div>
+
       {visible.length === 0 ? (
         <Card className="p-8 text-center text-sm text-muted-foreground">Keine Empfehlungen in dieser Kategorie.</Card>
       ) : (
-        <div className="grid grid-cols-1 gap-3 lg:grid-cols-2">
+        <div className="flex flex-col gap-3">
           {visible.map((r) => (
             <RecommendationCard
               categoryLabel={CATEGORIES[r.categoryKey].label}

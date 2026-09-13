@@ -16,7 +16,7 @@ export default function SourceBadge({ source, className }) {
   return (
     <span
       className={cn(
-        "inline-flex w-fit items-center rounded-full border px-2 py-0.5 font-mono text-[0.62rem] font-medium uppercase tracking-wide",
+        "inline-flex w-fit items-center whitespace-nowrap rounded-full border px-2 py-0.5 font-mono text-[0.62rem] font-medium uppercase tracking-wide",
         STYLES[source] || STYLES.none,
         className
       )}

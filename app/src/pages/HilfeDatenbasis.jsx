@@ -2,7 +2,7 @@ import { Card } from "@/components/ui/card";
 
 const SECTIONS = [
   { id: "hauptwert", label: "Hauptwert-Regel" },
-  { id: "passgenauigkeit", label: "Passgenauigkeit" },
+  { id: "effizienz", label: "Effizienz" },
   { id: "funnel", label: "Funnel-Stufen" },
   { id: "schaetzungen", label: "Schätzungen im Produkt" },
   { id: "beispieldaten", label: "Beispieldaten" },
@@ -49,7 +49,7 @@ export default function HilfeDatenbasis() {
         </p>
       </Section>
 
-      <Section id="passgenauigkeit" title="Passgenauigkeit &amp; Cluster-Vergleich">
+      <Section id="effizienz" title="Effizienz &amp; Cluster-Vergleich">
         <p>
           Vergleicht die kumulierten eigenen Klicks einer Anzeige mit dem Median vergleichbarer Anzeigen im selben Skill-Cluster (reale
           Cluster-Daten). Ab 115 % des Medians gilt eine Anzeige als "Top", ab 85 % als "Beobachten", darunter als "Handlungsbedarf". Die
@@ -99,7 +99,7 @@ export default function HilfeDatenbasis() {
       <Section id="empfehlungen" title="Empfehlungs-Engine">
         <p>
           Alle Empfehlungen werden ausschließlich regelbasiert aus den oben beschriebenen echten (bzw. offen als Schätzung markierten)
-          Kennzahlen abgeleitet — Passgenauigkeit, Restlaufzeit, Kosten je Börse, Klick-/Bewerbungsverhältnis im Vergleich zum
+          Kennzahlen abgeleitet — Effizienz, Restlaufzeit, Kosten je Börse, Klick-/Bewerbungsverhältnis im Vergleich zum
           Portfolio-Median. Es gibt keine Empfehlungen für Social Media, Programmatic Recruiting oder Employer Branding, da dafür keine
           Datengrundlage im Projekt existiert — statt Platzhalter mit erfundenen Zahlen zu zeigen, entfallen diese Kategorien bewusst.
         </p>
@@ -108,7 +108,7 @@ export default function HilfeDatenbasis() {
       <Section id="score" title="Qualitätssignal-Score">
         <p>
           Der Score (0–100) auf der Übersicht deckt bewusst nur zwei Dimensionen ab, für die echte Daten vorliegen: 60 % Anteil Anzeigen
-          mit Passgenauigkeit "Top"/"Beobachten", 40 % Anteil Anzeigen mit Bewerbungsstart-Quote im bzw. über dem Portfolio-Median.
+          mit Effizienz "Top"/"Beobachten", 40 % Anteil Anzeigen mit Bewerbungsstart-Quote im bzw. über dem Portfolio-Median.
           Weitere im Konzept vorgesehene Faktoren (z. B. Skill-Passung im Detail, regionale Eignung, Kosteneffizienz je Börse) fehlen
           bewusst, solange dafür keine belastbare Datengrundlage vorliegt.
         </p>

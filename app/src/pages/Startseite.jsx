@@ -9,21 +9,23 @@ import DailyClicksChart from "@/components/dashboard/DailyClicksChart";
 import PortalRankingTable from "@/components/dashboard/PortalRankingTable";
 import QualitySignalCard from "@/components/dashboard/QualitySignalCard";
 import CostDonut from "@/components/dashboard/CostDonut";
+import MetricTabs from "@/components/dashboard/MetricTabs";
 import GlobalFilters, { ZEITRAUM_OPTIONS } from "@/components/layout/GlobalFilters";
-import { PassgenauigkeitBadge } from "@/components/dashboard/Passgenauigkeit";
-import SourceBadge from "@/components/dashboard/SourceBadge";
+import { EfficiencyBadge } from "@/components/dashboard/EfficiencyBadge";
 import { Card } from "@/components/ui/card";
 import { cn } from "@/lib/utils";
 import { readSetting } from "@/lib/settings";
 import { generateRecommendations, PRIORITY_LABEL } from "@/lib/recommendations";
 import {
-  resolveMainValue,
   formatNumber,
-  computePassgenauigkeit,
-  buildPortfolioDailyClicks,
+  buildFunnel,
+  computeAdEfficiency,
+  buildPortfolioDailySeries,
   buildPortfolioBoardPerformance,
   computeQualityScore,
   buildBoardList,
+  FUNNEL_STAGES,
+  getBoardColor,
   getRemainingRuntimeDays,
 } from "@/lib/funnel";
 
@@ -44,14 +46,13 @@ const clicksTotals = ownVsExternalTotals("clicks");
 
 const passCounts = ads.reduce(
   (acc, ad) => {
-    const p = computePassgenauigkeit(ad);
+    const p = computeAdEfficiency(ad);
     if (p) acc[p.tier] += 1;
     return acc;
   },
   { top: 0, watch: 0, action: 0 }
 );
 
-const portfolioDailyClicks = buildPortfolioDailyClicks(ads);
 const portfolioBoards = buildPortfolioBoardPerformance(ads);
 const qualityScore = computeQualityScore(ads);
 const topRecommendations = generateRecommendations().slice(0, 3);
@@ -66,6 +67,12 @@ const endingSoonAds = activeAds.filter((ad) => {
 
 export default function Startseite() {
   const [zeitraum, setZeitraum] = useState(() => readSetting("defaultZeitraum", "all"));
+  const [metricKey, setMetricKey] = useState("clicks");
+  const metricLabel = FUNNEL_STAGES.find((s) => s.key === metricKey)?.label ?? "Klicks";
+  const portfolioDailySeries = buildPortfolioDailySeries(ads, metricKey);
+
+  const [topAdsMetric, setTopAdsMetric] = useState("clicks");
+  const topAdsMetricLabel = FUNNEL_STAGES.find((s) => s.key === topAdsMetric)?.label ?? "Klicks";
 
   const topAds = useMemo(() => {
     const option = ZEITRAUM_OPTIONS.find((o) => o.key === zeitraum);
@@ -76,8 +83,10 @@ export default function Startseite() {
             const days = (Date.now() - new Date(ad.publicationStartDate).getTime()) / 86400000;
             return days >= 0 && days <= option.days;
           });
-    return [...scoped].sort((a, b) => (resolveMainValue(b.kpi.clicks).value ?? 0) - (resolveMainValue(a.kpi.clicks).value ?? 0)).slice(0, 6);
-  }, [zeitraum]);
+    return [...scoped]
+      .sort((a, b) => (buildFunnel(b).find((s) => s.key === topAdsMetric)?.value ?? 0) - (buildFunnel(a).find((s) => s.key === topAdsMetric)?.value ?? 0))
+      .slice(0, 6);
+  }, [zeitraum, topAdsMetric]);
 
   return (
     <div className="mx-auto max-w-[1400px] px-6 py-6">
@@ -97,8 +106,13 @@ export default function Startseite() {
       <section className="mb-6">
         <h2 className="mb-2 font-heading text-sm font-medium">Performance im Zeitverlauf</h2>
         <Card className="p-5">
-          <p className="mb-3 text-xs text-muted-foreground">Tägliche Klicks (eigene Messung) über alle {ads.length} Anzeigen summiert.</p>
-          <DailyClicksChart color="var(--pw-navy-800)" data={portfolioDailyClicks} />
+          <MetricTabs onChange={setMetricKey} value={metricKey} />
+          <p className="mb-3 text-xs text-muted-foreground">
+            {portfolioDailySeries.isEstimated
+              ? `Tägliche ${metricLabel}, geschätzt anhand der Klick-Tagesverteilung über alle ${ads.length} Anzeigen (für diese Kennzahl liegen keine echten Tageswerte vor).`
+              : `Tägliche ${metricLabel} (eigene Messung) über alle ${ads.length} Anzeigen summiert.`}
+          </p>
+          <DailyClicksChart color="var(--pw-navy-800)" data={portfolioDailySeries.data} />
         </Card>
       </section>
 
@@ -160,7 +174,7 @@ export default function Startseite() {
 
       <section className="mb-6">
         <div className="mb-2 flex items-center justify-between">
-          <h2 className="font-heading text-sm font-medium">Passgenauigkeit aller laufenden Anzeigen</h2>
+          <h2 className="font-heading text-sm font-medium">Effizienz aller laufenden Anzeigen</h2>
         </div>
         <div className="grid grid-cols-3 gap-3">
           <Card className="flex items-center gap-3 border-success/30 bg-success/5 p-4">
@@ -189,11 +203,12 @@ export default function Startseite() {
 
       <section className="mb-6">
         <div className="mb-2 flex items-center justify-between">
-          <h2 className="font-heading text-sm font-medium">Stärkste Anzeigen nach Klicks</h2>
+          <h2 className="font-heading text-sm font-medium">Stärkste Anzeigen nach {topAdsMetricLabel}</h2>
           <Link className="text-xs text-muted-foreground underline decoration-dotted underline-offset-2 hover:text-foreground" to="/stellenanzeigen">
             Alle {ads.length} Anzeigen →
           </Link>
         </div>
+        <MetricTabs onChange={setTopAdsMetric} value={topAdsMetric} />
         {topAds.length === 0 ? (
           <Card className="p-6 text-center text-sm text-muted-foreground">Keine Anzeigen mit Schaltdatum in diesem Zeitraum.</Card>
         ) : (
@@ -202,14 +217,15 @@ export default function Startseite() {
             <thead>
               <tr className="border-b border-border text-left text-xs uppercase tracking-wide text-muted-foreground">
                 <th className="px-4 py-3 font-medium">Stellentitel</th>
-                <th className="px-4 py-3 text-right font-medium">Klicks</th>
-                <th className="px-4 py-3 font-medium">Quelle</th>
-                <th className="px-4 py-3 font-medium">Passgenauigkeit</th>
+                <th className="px-4 py-3 text-right font-medium">{topAdsMetricLabel}</th>
+                <th className="px-4 py-3 font-medium">Geschaltete Stellenbörsen</th>
+                <th className="px-4 py-3 font-medium">Effizienz</th>
               </tr>
             </thead>
             <tbody>
               {topAds.map((ad) => {
-                const resolved = resolveMainValue(ad.kpi.clicks);
+                const value = buildFunnel(ad).find((s) => s.key === topAdsMetric)?.value ?? null;
+                const boardList = buildBoardList(ad);
                 return (
                   <tr className="border-b border-border last:border-0 hover:bg-muted/40" key={ad.id}>
                     <td className="px-4 py-3">
@@ -217,12 +233,17 @@ export default function Startseite() {
                         {ad.title}
                       </Link>
                     </td>
-                    <td className="px-4 py-3 text-right font-mono tabular-nums">{formatNumber(resolved.value)}</td>
+                    <td className="px-4 py-3 text-right font-mono text-[0.62rem] tabular-nums">{formatNumber(value)}</td>
                     <td className="px-4 py-3">
-                      <SourceBadge source={resolved.source} />
+                      {boardList.map((b, i) => (
+                        <p className="flex items-center gap-1.5 whitespace-nowrap" key={`${b.board}-${i}`}>
+                          <span className="inline-block size-2.5 shrink-0 rounded-sm" style={{ background: getBoardColor(b.board, i) }} />
+                          {b.board}
+                        </p>
+                      ))}
                     </td>
                     <td className="px-4 py-3">
-                      <PassgenauigkeitBadge ad={ad} size="sm" />
+                      <EfficiencyBadge ad={ad} size="sm" />
                     </td>
                   </tr>
                 );

@@ -1,11 +1,20 @@
 import { useMemo, useState } from "react";
 import { Link } from "react-router-dom";
-import { ArrowDown, ArrowUp, ArrowUpDown } from "lucide-react";
+import { ArrowDown, ArrowUp, ArrowUpDown, Search } from "lucide-react";
 import ads from "@/data/advertisements.json";
-import { PassgenauigkeitBadge } from "@/components/dashboard/Passgenauigkeit";
+import { EfficiencyBadge } from "@/components/dashboard/EfficiencyBadge";
 import { Card } from "@/components/ui/card";
-import { buildBoardList, computePassgenauigkeit, formatDate, formatNumber, getBoardColor, getRemainingRuntimeDays, resolveMainValue } from "@/lib/funnel";
+import { Input } from "@/components/ui/input";
+import { buildBoardList, computeAdEfficiency, formatDate, formatNumber, getBoardColor, getRemainingRuntimeDays, resolveMainValue } from "@/lib/funnel";
 import { cn } from "@/lib/utils";
+
+// Restlaufzeit-Dringlichkeit: 0 Tage (nicht gestartet/kein Bezug) bleibt
+// neutral, < 7 Tage rot, ab 7 Tage wieder neutral.
+function getRemainingUrgencyClass(days) {
+  if (days == null || days === 0) return "";
+  if (days < 7) return "text-destructive";
+  return "";
+}
 
 const STATUS_STYLES = {
   active: "border-success/40 bg-success/10 text-success",
@@ -27,17 +36,30 @@ const COLUMNS = [
   },
   { key: "clicks", label: "Klicks", align: "right", getValue: (ad) => resolveMainValue(ad.kpi.clicks).value },
   { key: "appClicks", label: "Gestartete Bewerbungen", align: "right", wrap: true, getValue: (ad) => resolveMainValue(ad.kpi.applicationClicks).value },
-  { key: "passgenauigkeit", label: "Passgenauigkeit", getValue: (ad) => computePassgenauigkeit(ad)?.ratio ?? null },
+  { key: "effizienz", label: "Effizienz", getValue: (ad) => computeAdEfficiency(ad)?.ratio ?? null },
 ];
 
 export default function Stellenanzeigen() {
   const [sort, setSort] = useState({ key: null, direction: "asc" });
+  const [search, setSearch] = useState("");
+
+  const filteredAds = useMemo(() => {
+    const query = search.trim().toLowerCase();
+    if (!query) return ads;
+    return ads.filter((ad) => {
+      const boards = buildBoardList(ad)
+        .map((b) => b.board)
+        .join(" ");
+      const haystack = [ad.title, ad.city, ad.order?.number, ad.statusLabel, boards].filter(Boolean).join(" ").toLowerCase();
+      return haystack.includes(query);
+    });
+  }, [search]);
 
   const sortedAds = useMemo(() => {
-    if (!sort.key) return ads;
+    if (!sort.key) return filteredAds;
     const column = COLUMNS.find((c) => c.key === sort.key);
     const factor = sort.direction === "asc" ? 1 : -1;
-    return [...ads].sort((a, b) => {
+    return [...filteredAds].sort((a, b) => {
       const va = column.getValue(a);
       const vb = column.getValue(b);
       if (va == null && vb == null) return 0;
@@ -46,7 +68,7 @@ export default function Stellenanzeigen() {
       if (typeof va === "string") return va.localeCompare(vb, "de") * factor;
       return (va - vb) * factor;
     });
-  }, [sort]);
+  }, [filteredAds, sort]);
 
   const toggleSort = (key) => {
     setSort((prev) => {
@@ -59,7 +81,19 @@ export default function Stellenanzeigen() {
   return (
     <div className="w-full px-6 py-6">
       <h1 className="mb-1 font-heading text-xl font-medium text-foreground">Stellenanzeigen</h1>
-      <p className="mb-6 text-sm text-muted-foreground">{ads.length} laufende / terminierte Anzeigen. Hauptwert je Kennzahl folgt der Quellen-Regel aus Schritt 3.</p>
+      <div className="mb-6 flex flex-wrap items-center justify-between gap-3">
+        <p className="text-sm text-muted-foreground">{ads.length} laufende / terminierte Anzeigen. Hauptwert je Kennzahl folgt der Quellen-Regel aus Schritt 3.</p>
+        <div className="relative w-full max-w-xs">
+          <Search className="pointer-events-none absolute top-1/2 left-2.5 size-4 -translate-y-1/2 text-muted-foreground" />
+          <Input
+            aria-label="Stellenanzeigen durchsuchen"
+            className="pl-8"
+            onChange={(e) => setSearch(e.target.value)}
+            placeholder="Suchen…"
+            value={search}
+          />
+        </div>
+      </div>
 
       <Card className="overflow-x-auto p-0">
         <table className="w-full min-w-[1100px] text-sm">
@@ -95,26 +129,33 @@ export default function Stellenanzeigen() {
             </tr>
           </thead>
           <tbody>
+            {sortedAds.length === 0 && (
+              <tr>
+                <td className="px-4 py-8 text-center text-sm text-muted-foreground" colSpan={COLUMNS.length}>
+                  Keine Anzeigen gefunden.
+                </td>
+              </tr>
+            )}
             {sortedAds.map((ad) => {
               const clicks = resolveMainValue(ad.kpi.clicks);
               const appClicks = resolveMainValue(ad.kpi.applicationClicks);
               const boardList = buildBoardList(ad);
               return (
                 <tr className="border-b border-border last:border-0 hover:bg-muted/40" key={ad.id}>
-                  <td className="px-4 py-3">
+                  <td className="px-4 py-3 align-middle">
                     <span className={`inline-flex items-center rounded-full border px-2.5 py-0.5 font-mono text-[0.62rem] font-medium uppercase tracking-wider ${STATUS_STYLES[ad.status] || ""}`}>
                       {ad.statusLabel}
                     </span>
                   </td>
-                  <td className="px-4 py-3 font-mono text-[0.82rem] tabular-nums">{formatDate(ad.publicationStartDate)}</td>
-                  <td className="px-4 py-3">
+                  <td className="px-4 py-3 align-middle font-mono text-[0.82rem] tabular-nums">{formatDate(ad.publicationStartDate)}</td>
+                  <td className="px-4 py-3 align-middle">
                     <Link className="font-medium text-[var(--sg-blue-700)] underline decoration-dotted underline-offset-4" to={`/stellenanzeigen/${ad.id}`}>
                       {ad.title}
                     </Link>
                     {ad.city && <span className="ml-2 text-xs text-muted-foreground">{ad.city}</span>}
                   </td>
-                  <td className="px-4 py-3 font-mono text-[0.82rem] tabular-nums">{ad.order.number}</td>
-                  <td className="px-4 py-3">
+                  <td className="px-4 py-3 align-middle font-mono text-[0.82rem] tabular-nums">{ad.order.number}</td>
+                  <td className="px-4 py-3 align-middle">
                     {boardList.map((b, i) => (
                       <p className="flex items-center gap-1.5 whitespace-nowrap" key={`${b.board}-${i}`}>
                         <span className="inline-block size-2.5 shrink-0 rounded-sm" style={{ background: getBoardColor(b.board, i) }} />
@@ -122,27 +163,27 @@ export default function Stellenanzeigen() {
                       </p>
                     ))}
                   </td>
-                  <td className="px-4 py-3 text-right">
+                  <td className="px-4 py-3 text-right align-middle">
                     {boardList.map((b, i) => (
                       <p className="whitespace-nowrap font-mono tabular-nums" key={`${b.board}-${i}`}>
                         {b.days != null ? `${b.days} Tage` : "–"}
                       </p>
                     ))}
                   </td>
-                  <td className="px-4 py-3 text-right">
+                  <td className="px-4 py-3 text-right align-middle">
                     {boardList.map((b, i) => {
                       const remaining = getRemainingRuntimeDays(ad.publicationStartDate, b.days);
                       return (
-                        <p className="whitespace-nowrap font-mono tabular-nums" key={`${b.board}-${i}`}>
+                        <p className={cn("whitespace-nowrap font-mono tabular-nums", getRemainingUrgencyClass(remaining))} key={`${b.board}-${i}`}>
                           {remaining != null ? `${remaining} Tage` : "–"}
                         </p>
                       );
                     })}
                   </td>
-                  <td className="px-4 py-3 text-right font-mono tabular-nums">{formatNumber(clicks.value)}</td>
-                  <td className="px-4 py-3 text-right font-mono tabular-nums">{formatNumber(appClicks.value)}</td>
-                  <td className="whitespace-nowrap px-4 py-3 pr-6">
-                    <PassgenauigkeitBadge ad={ad} size="sm" />
+                  <td className="px-4 py-3 text-right align-middle font-mono tabular-nums">{formatNumber(clicks.value)}</td>
+                  <td className="px-4 py-3 text-right align-middle font-mono tabular-nums">{formatNumber(appClicks.value)}</td>
+                  <td className="whitespace-nowrap px-4 py-3 pr-6 align-middle">
+                    <EfficiencyBadge ad={ad} size="sm" />
                   </td>
                 </tr>
               );

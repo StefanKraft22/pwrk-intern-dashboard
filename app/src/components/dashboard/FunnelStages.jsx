@@ -4,16 +4,17 @@ import SourceBadge from "./SourceBadge";
 import { buildFunnel, formatNumber } from "@/lib/funnel";
 import { useApplicationsInput } from "@/lib/useApplicationsInput";
 import { Input } from "@/components/ui/input";
+import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
 
 function StageTile({ stage }) {
   return (
     <div className="flex min-w-[152px] flex-1 flex-col gap-2 rounded-xl border border-border bg-card p-4">
-      <div className="flex items-center justify-between gap-2">
+      <div className="flex min-h-8 items-center justify-between gap-2">
         <span className="text-xs font-medium text-muted-foreground">{stage.label}</span>
       </div>
 
-      <div className="font-heading text-2xl font-semibold tabular-nums text-foreground">
+      <div className="min-h-9 font-heading text-2xl font-semibold tabular-nums text-foreground">
         {stage.isMissingCritical ? (
           <span className="text-sm font-normal text-muted-foreground">Es liegen keine Daten vor. Eine Schätzung wäre zu ungenau.</span>
         ) : (
@@ -21,7 +22,7 @@ function StageTile({ stage }) {
         )}
       </div>
 
-      {!stage.isMissingCritical && <SourceBadge source={stage.source} />}
+      <div className="min-h-[18px]">{!stage.isMissingCritical && <SourceBadge source={stage.source} />}</div>
 
       <p className="text-[0.72rem] leading-snug text-muted-foreground">{stage.sub}</p>
     </div>
@@ -47,9 +48,9 @@ function ApplicationsInputTile({ adId, applicationClicksValue }) {
 
   return (
     <div className="flex min-w-[180px] flex-1 flex-col gap-2 rounded-xl border-2 border-[var(--sg-gold-700)]/50 bg-[var(--sg-gold-100)]/40 p-4">
-      <div className="flex items-center gap-1.5 text-xs font-medium text-[var(--sg-gold-900)]">
-        <ClipboardCheck className="size-3.5" />
-        Eingegangene Bewerbungen
+      <div className="flex items-center gap-2 text-xs font-medium text-[var(--sg-gold-900)]">
+        <ClipboardCheck className="size-6 shrink-0" strokeWidth={1.75} />
+        <span className="leading-tight">Eingegangene Bewerbungen</span>
       </div>
       <span className="w-fit rounded-full border border-[var(--sg-gold-700)]/40 bg-[var(--sg-gold-200)]/60 px-2 py-0.5 font-mono text-[0.6rem] uppercase tracking-wide text-[var(--sg-gold-900)]">
         Außerhalb des Tracking-Bereichs
@@ -72,6 +73,12 @@ function ApplicationsInputTile({ adId, applicationClicksValue }) {
       <p className="mt-1 border-t border-[var(--sg-gold-700)]/25 pt-2.5 text-[0.72rem] leading-snug text-muted-foreground">
         Eingabe manuell oder über Ihr Recruiting System (BMS)
       </p>
+      <div className="mt-1 flex flex-col items-start gap-1.5">
+        <p className="text-[0.72rem] font-bold leading-snug text-foreground">Noch kein BMS?</p>
+        <Button className="w-full bg-[var(--pw-red-500)] text-white hover:bg-[var(--pw-red-700)]" size="sm" type="button">
+          Jetzt informieren
+        </Button>
+      </div>
     </div>
   );
 }
@@ -81,11 +88,11 @@ export default function FunnelStages({ ad, className }) {
   const applicationClicksStage = stages.find((s) => s.key === "applicationClicks");
 
   return (
-    <div className={cn("flex flex-wrap items-stretch gap-2", className)}>
-      {stages.map((stage, i) => (
+    <div className={cn("grid grid-cols-2 items-stretch gap-2 sm:grid-cols-3 lg:grid-cols-6", className)}>
+      {stages.map((stage) => (
         <div className="flex items-stretch gap-2" key={stage.key}>
           <StageTile stage={stage} />
-          <div className="flex items-center text-muted-foreground/50">
+          <div className="hidden items-center text-muted-foreground/50 lg:flex">
             <ChevronRight className="size-7" strokeWidth={3} />
           </div>
         </div>

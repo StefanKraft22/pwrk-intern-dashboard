@@ -7,7 +7,7 @@ import {
   buildBoardList,
   buildPortfolioBoardPerformance,
   computeBudgetConsumption,
-  computePassgenauigkeit,
+  computeAdEfficiency,
   formatDate,
   getRemainingRuntimeDays,
   resolveMainValue,
@@ -19,11 +19,11 @@ function timestamp() {
 }
 
 function exportStellenanzeigen() {
-  const headers = ["Status", "Schaltdatum", "Stellentitel", "Auftragsnr.", "Klicks", "Gestartete Bewerbungen", "Restlaufzeit (Tage)", "Passgenauigkeit"];
+  const headers = ["Status", "Schaltdatum", "Stellentitel", "Auftragsnr.", "Klicks", "Gestartete Bewerbungen", "Restlaufzeit (Tage)", "Effizienz"];
   const rows = ads.map((ad) => {
     const boards = buildBoardList(ad);
     const remaining = Math.max(0, ...boards.map((b) => getRemainingRuntimeDays(ad.publicationStartDate, b.days) ?? 0));
-    const pass = computePassgenauigkeit(ad);
+    const pass = computeAdEfficiency(ad);
     return [
       ad.statusLabel,
       formatDate(ad.publicationStartDate),
@@ -72,7 +72,7 @@ const REPORTS = [
   {
     key: "stellenanzeigen",
     title: "Stellenanzeigen-Übersicht",
-    description: `Status, Schaltdatum, Klicks, Bewerbungen, Restlaufzeit und Passgenauigkeit aller ${ads.length} Anzeigen.`,
+    description: `Status, Schaltdatum, Klicks, Bewerbungen, Restlaufzeit und Effizienz aller ${ads.length} Anzeigen.`,
     run: exportStellenanzeigen,
   },
   {
