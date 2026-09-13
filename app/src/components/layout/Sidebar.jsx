@@ -68,7 +68,7 @@ function NavContent({ onNavigate }) {
             <p className="text-[0.65rem] font-medium tracking-wide text-white/50 uppercase">Ihr Ansprechpartner</p>
             <p className="truncate text-sm font-medium text-white">Marcus Kreuchauff</p>
             <a className="text-xs text-white/60 underline decoration-dotted underline-offset-2 hover:text-white" href="#">
-              Nachricht schreiben
+              Nachricht schreiben oder direkt anrufen
             </a>
           </div>
         </div>
