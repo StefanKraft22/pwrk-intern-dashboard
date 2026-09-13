@@ -3,6 +3,7 @@ import Layout from "@/components/layout/Layout";
 import Startseite from "@/pages/Startseite";
 import Stellenanzeigen from "@/pages/Stellenanzeigen";
 import StellenanzeigeDetail from "@/pages/StellenanzeigeDetail";
+import SocialMedia from "@/pages/SocialMedia";
 import Statistik from "@/pages/Statistik";
 import Auftragsabwicklung from "@/pages/Auftragsabwicklung";
 import Empfehlungen from "@/pages/Empfehlungen";
@@ -20,6 +21,7 @@ export default function App() {
         <Route index element={<Startseite />} />
         <Route element={<Stellenanzeigen />} path="stellenanzeigen" />
         <Route element={<StellenanzeigeDetail />} path="stellenanzeigen/:id" />
+        <Route element={<SocialMedia />} path="social-media" />
         <Route element={<Statistik />} path="statistik" />
         <Route element={<Auftragsabwicklung />} path="auftragsabwicklung" />
         <Route element={<Empfehlungen />} path="empfehlungen" />

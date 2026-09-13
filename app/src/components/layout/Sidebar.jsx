@@ -1,4 +1,4 @@
-import { BookOpen, FileSpreadsheet, FileText, Gauge, LayoutGrid, LifeBuoy, Lightbulb, ListChecks, Route, Scale, Settings, Wallet, X } from "lucide-react";
+import { BookOpen, FileSpreadsheet, FileText, Gauge, LayoutGrid, LifeBuoy, Lightbulb, ListChecks, Route, Scale, Settings, Share2, Wallet, X } from "lucide-react";
 import { NavLink } from "react-router-dom";
 import { cn } from "@/lib/utils";
 import ansprechpartnerPhoto from "@/assets/ansprechpartner-marcus-kreuchauff.jpg";
@@ -9,6 +9,7 @@ const NAV_GROUPS = [
       { to: "/", label: "Übersicht", icon: LayoutGrid, end: true },
       { to: "/empfehlungen", label: "Empfehlungen", icon: Lightbulb },
       { to: "/stellenanzeigen", label: "Stellenanzeigen", icon: FileText },
+      { to: "/social-media", label: "Social Media", icon: Share2 },
       { to: "/auftragsabwicklung", label: "Auftragsabwicklung", icon: ListChecks },
       { to: "/statistik", label: "Statistik", icon: Gauge },
     ],

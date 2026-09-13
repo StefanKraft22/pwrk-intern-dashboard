@@ -24,7 +24,7 @@ export default function PlatformDistribution() {
       <div className="relative">
         <ResponsiveContainer height={200} width="100%">
           <PieChart>
-            <Pie data={data} dataKey="value" endAngle={-270} innerRadius={62} outerRadius={88} paddingAngle={2} startAngle={90}>
+            <Pie cx="50%" cy="50%" data={data} dataKey="value" endAngle={-270} innerRadius={62} outerRadius={88} paddingAngle={2} startAngle={90}>
               {data.map((entry) => (
                 <Cell fill={entry.color} key={entry.key} stroke="var(--card)" strokeWidth={2} />
               ))}
