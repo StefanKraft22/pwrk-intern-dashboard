@@ -1,11 +1,9 @@
 import { Card } from "@/components/ui/card";
-import Sparkline from "@/components/dashboard/Sparkline";
 import { formatDeltaPercent, isDeltaPositive } from "@/lib/socialMedia";
 import { cn } from "@/lib/utils";
 
-export default function SocialKpiCard({ label, value, delta, icon: Icon, iconColor = "var(--pw-navy-800)", spark, invert = false }) {
+export default function SocialKpiCard({ label, value, delta, icon: Icon, iconColor = "var(--pw-navy-800)", invert = false }) {
   const positive = isDeltaPositive(delta, invert);
-  const trendColor = positive ? "var(--success)" : "var(--destructive)";
 
   return (
     <Card className="flex flex-col gap-2 p-4">
@@ -15,10 +13,7 @@ export default function SocialKpiCard({ label, value, delta, icon: Icon, iconCol
         </span>
         <span className="text-xs font-medium text-muted-foreground">{label}</span>
       </div>
-      <div className="flex items-end justify-between gap-3">
-        <span className="font-heading text-2xl font-semibold tabular-nums text-foreground">{value}</span>
-        {spark && <Sparkline color={trendColor} data={spark.map((v) => ({ value: v }))} height={26} width={84} />}
-      </div>
+      <span className="font-heading text-2xl font-semibold whitespace-nowrap tabular-nums text-foreground">{value}</span>
       <span className={cn("text-xs font-medium", positive ? "text-success" : "text-destructive")}>
         {formatDeltaPercent(delta)} <span className="font-normal text-muted-foreground">vs. Vormonat</span>
       </span>

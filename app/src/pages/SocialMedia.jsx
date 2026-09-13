@@ -25,13 +25,12 @@ export default function SocialMedia() {
       <SocialMediaHeader />
 
       <section className="mb-6 grid grid-cols-2 gap-3 sm:grid-cols-3 lg:grid-cols-6">
-        <SocialKpiCard delta={k.reach.deltaPercent} icon={Eye} iconColor="var(--pw-navy-800)" label="Reichweite" spark={k.reach.spark} value={k.reach.value.toLocaleString("de-DE")} />
+        <SocialKpiCard delta={k.reach.deltaPercent} icon={Eye} iconColor="var(--pw-navy-800)" label="Reichweite" value={k.reach.value.toLocaleString("de-DE")} />
         <SocialKpiCard
           delta={k.impressions.deltaPercent}
           icon={Layers}
           iconColor="var(--sg-blue-700)"
           label="Impressionen"
-          spark={k.impressions.spark}
           value={k.impressions.value.toLocaleString("de-DE")}
         />
         <SocialKpiCard
@@ -39,7 +38,6 @@ export default function SocialMedia() {
           icon={Heart}
           iconColor="var(--sg-terracotta-500)"
           label="Engagements"
-          spark={k.engagements.spark}
           value={k.engagements.value.toLocaleString("de-DE")}
         />
         <SocialKpiCard
@@ -47,7 +45,6 @@ export default function SocialMedia() {
           icon={MousePointerClick}
           iconColor="var(--pw-navy-400)"
           label="Klicks auf Link"
-          spark={k.linkClicks.spark}
           value={k.linkClicks.value.toLocaleString("de-DE")}
         />
         <SocialKpiCard
@@ -55,7 +52,6 @@ export default function SocialMedia() {
           icon={UserPlus}
           iconColor="var(--sg-gold-700)"
           label="Generierte Bewerbungen"
-          spark={k.applications.spark}
           value={k.applications.value.toLocaleString("de-DE")}
         />
         <SocialKpiCard
@@ -64,7 +60,6 @@ export default function SocialMedia() {
           invert
           iconColor="var(--pw-red-500)"
           label="Kosten pro Bewerbung"
-          spark={k.costPerApplication.spark}
           value={formatEuro(k.costPerApplication.value)}
         />
       </section>

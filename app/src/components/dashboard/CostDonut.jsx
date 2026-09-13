@@ -31,7 +31,7 @@ export default function CostDonut({ boards }) {
           </PieChart>
         </ResponsiveContainer>
         <div className="pointer-events-none absolute inset-0 flex flex-col items-center justify-center">
-          <span className="font-heading text-lg font-semibold text-foreground">{formatCurrency(total)}</span>
+          <span className="font-heading text-[0.9rem] font-semibold text-foreground">{formatCurrency(total)}</span>
           <span className="text-[0.65rem] text-muted-foreground">Gesamt</span>
         </div>
       </div>
